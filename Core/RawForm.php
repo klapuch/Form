@@ -5,20 +5,14 @@ namespace Klapuch\Form;
 use Klapuch\Markup;
 
 /**
- * Safely submitted form
+ * Raw form
  */
-final class SafeForm implements Control {
-	private $method;
-	private $action;
+final class RawForm implements Control {
+	private $attributes;
 	private $controls;
 
-	public function __construct(
-		string $method,
-		string $action,
-		Control ...$controls
-	) {
-		$this->method = $method;
-		$this->action = $action;
+	public function __construct(array $attributes, Control ...$controls) {
+		$this->attributes = $attributes;
 		$this->controls = $controls;
 	}
 
@@ -27,8 +21,16 @@ final class SafeForm implements Control {
 			new Markup\HtmlTag(
 				'form',
 				new Markup\HtmlAttributes(
-					new Markup\HtmlAttribute('method', $this->method),
-					new Markup\HtmlAttribute('action', $this->action)
+					...array_reduce(
+						   array_keys($this->attributes),
+						   function($attributes, string $name) {
+							   $attributes[] = new Markup\HtmlAttribute(
+								   $name,
+								   $this->attributes[$name]
+							   );
+							   return $attributes;
+						   }
+					   )
 				)
 			),
 			new Markup\FakeElement(

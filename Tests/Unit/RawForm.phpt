@@ -11,11 +11,19 @@ use Tester\Assert;
 
 require __DIR__ . '/../bootstrap.php';
 
-final class SafeForm extends Tester\TestCase {
+final class RawForm extends Tester\TestCase {
+	public function testFormTags() {
+		$form = (new Form\RawForm(
+			['method' => 'POST'],
+			new Form\FakeControl('')
+		))->render();
+		Assert::contains('<form ', $form);
+		Assert::contains('/>', $form);
+	}
+
 	public function testIncludingAttributes() {
-		$form = (new Form\SafeForm(
-			'POST',
-			'/index.php',
+		$form = (new Form\RawForm(
+			['method' => 'POST', 'action' => '/index.php'],
 			new Form\FakeControl('')
 		))->render();
 		Assert::contains('POST', $form);
@@ -25,9 +33,8 @@ final class SafeForm extends Tester\TestCase {
 	public function testWrappingControlsToForm() {
 		Assert::same(
 			'<form method="POST" action="/index.php"><input name="first"/><input name="second"/></form>',
-			(new Form\SafeForm(
-				'POST',
-				'/index.php',
+			(new Form\RawForm(
+				['method' => 'POST', 'action' => '/index.php'],
 				new Form\FakeControl('<input name="first"/>'),
 				new Form\FakeControl('<input name="second"/>')
 			))->render()
@@ -35,4 +42,4 @@ final class SafeForm extends Tester\TestCase {
 	}
 }
 
-(new SafeForm())->run();
+(new RawForm())->run();
