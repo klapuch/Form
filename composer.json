@@ -1,0 +1,31 @@
+{
+  "name": "klapuch/form",
+  "description": "Highly customizable forms in multiple formats",
+  "type": "library",
+  "homepage": "https://github.com/klapuch/Form",
+  "authors": [
+	{
+	  "name": "Dominik Klapuch",
+	  "email": "klapuchdominik@gmail.com",
+	  "homepage": "https://www.github.com/klapuch",
+	  "role": "Developer"
+	}
+  ],
+  "require": {
+	"php": ">=7.1",
+	"klapuch/markup": "^1.0.0",
+	"klapuch/csrf": "^1.0.0"
+  },
+  "require-dev": {
+	"nette/tester": "^1.7",
+	"object-calisthenics/phpcs-calisthenics-rules": "^2.0",
+	"sebastian/phpcpd": "*"
+  },
+  "autoload": {
+	"psr-4": {
+	  "Klapuch\\Form\\": [
+		"Core/"
+	  ]
+	}
+  }
+}
