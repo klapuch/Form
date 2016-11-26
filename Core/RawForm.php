@@ -18,31 +18,34 @@ final class RawForm implements Control {
 
 	public function render(): string {
 		return (new Markup\NormalizedElement(
-			new Markup\HtmlTag(
-				'form',
-				new Markup\HtmlAttributes(
-					...array_reduce(
-						   array_keys($this->attributes),
-						   function($attributes, string $name) {
-							   $attributes[] = new Markup\HtmlAttribute(
-								   $name,
-								   $this->attributes[$name]
-							   );
-							   return $attributes;
-						   }
-					   )
-				)
-			),
-			new Markup\FakeElement(
-				implode(
-					array_map(
-						function(Control $control): string {
-							return $control->render();
-						},
-						$this->controls
-					)
-				)
-			)
+			new Markup\HtmlTag('form', $this->attributes()),
+			new Markup\FakeElement($this->children())
 		))->markup();
+	}
+
+	private function attributes(): Markup\Attributes {
+		return new Markup\HtmlAttributes(
+			...array_reduce(
+				   array_keys($this->attributes),
+				   function($attributes, string $name) {
+					   $attributes[] = new Markup\HtmlAttribute(
+						   $name,
+						   $this->attributes[$name]
+					   );
+					   return $attributes;
+				   }
+			   )
+		);
+	}
+
+	private function children(): string {
+		return implode(
+			array_map(
+				function(Control $control): string {
+					return $control->render();
+				},
+				$this->controls
+			)
+		);
 	}
 }

@@ -24,8 +24,7 @@ final class BootstrapInput implements Control {
 					'div',
 					new Markup\HtmlAttributes(
 						new Markup\HtmlAttribute(
-							'class',
-							sprintf('col-sm-%d', $this->size)
+							'class', sprintf('col-sm-%d', $this->size)
 						)
 					)
 				)
