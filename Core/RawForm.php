@@ -25,16 +25,16 @@ final class RawForm implements Control {
 
 	private function attributes(): Markup\Attributes {
 		return new Markup\HtmlAttributes(
-			...array_reduce(
-				   array_keys($this->attributes),
-				   function($attributes, string $name) {
-					   $attributes[] = new Markup\HtmlAttribute(
-						   $name,
-						   $this->attributes[$name]
-					   );
-					   return $attributes;
-				   }
-			   )
+			...array_map(
+				function(string $name, string $value): Markup\Attribute {
+					return new Markup\HtmlAttribute(
+						$name,
+						$this->attributes[$name]
+					);
+				},
+				array_keys($this->attributes),
+				$this->attributes
+			)
 		);
 	}
 
