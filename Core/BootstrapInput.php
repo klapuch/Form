@@ -9,11 +9,11 @@ use Klapuch\Markup;
  */
 final class BootstrapInput implements Control {
 	private $origin;
-	private $size;
+	private $columns;
 
-	public function __construct(Control $origin, int $size) {
+	public function __construct(Control $origin, int $columns) {
 		$this->origin = $origin;
-		$this->size = $size;
+		$this->columns = $columns;
 	}
 
 	public function render(): string {
@@ -24,7 +24,7 @@ final class BootstrapInput implements Control {
 					'div',
 					new Markup\HtmlAttributes(
 						new Markup\HtmlAttribute(
-							'class', sprintf('col-sm-%d', $this->size)
+							'class', sprintf('col-sm-%d', $this->columns)
 						)
 					)
 				)
