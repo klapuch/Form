@@ -56,6 +56,17 @@ final class Input extends Tester\TestCase {
 		);
 	}
 
+	public function testPassingStatedValue() {
+		$storage = [];
+		Assert::same(
+			'<input foo="bar" name="surname" value="myself"/>',
+			(new Form\SafeInput(
+				['foo' => 'bar', 'name' => 'surname', 'value' => 'myself'],
+				new Form\Backup($storage)
+			))->render()
+		);
+	}
+
 	public function testOverwritingValue() {
 		$storage = ['surname' => 'myself'];
 		Assert::same(
@@ -69,15 +80,21 @@ final class Input extends Tester\TestCase {
 
 	public function testRemovingAfterPresenting() {
 		$storage = ['surname' => 'myself'];
-		$expectation = '<input foo="bar" name="surname" value="myself"/>';
-		$input = new Form\SafeInput(
-			['foo' => 'bar', 'name' => 'surname', 'value' => 'you'],
-			new Form\Backup($storage)
+		Assert::same(
+			'<input foo="bar" name="surname" value="myself"/>',
+			(new Form\SafeInput(
+				['foo' => 'bar', 'name' => 'surname', 'value' => 'you'],
+				new Form\Backup($storage)
+			))->render()
 		);
-		Assert::same($expectation, $input->render());
-		Assert::notSame($expectation, $input->render());
+		Assert::same(
+			'<input foo="bar" name="surname" value="you"/>',
+			(new Form\SafeInput(
+				['foo' => 'bar', 'name' => 'surname', 'value' => 'you'],
+				new Form\Backup($storage)
+			))->render()
+		);
 	}
-
 }
 
 (new Input())->run();
