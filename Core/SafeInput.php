@@ -17,7 +17,9 @@ final class SafeInput implements Control {
 	}
 
 	public function render(): string {
-		$this->attributes['value'] = (string)$this->backup[$this->attributes['name'] ?? ''];
+		$name = $this->attributes['name'] ?? '';
+		$this->attributes['value'] = (string)$this->backup[$name];
+		unset($this->backup[$name]);
 		return (new Markup\NormalizedElement(
 			new Markup\HtmlTag('input', $this->attributes()),
 			new Markup\EmptyElement()
