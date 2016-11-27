@@ -9,12 +9,15 @@ use Klapuch\Markup;
  */
 final class SafeInput implements Control {
 	private $attributes;
+	private $backup;
 
-	public function __construct(array $attributes) {
+	public function __construct(array $attributes, Backup $backup) {
 		$this->attributes = $attributes;
+		$this->backup = $backup;
 	}
 
 	public function render(): string {
+		$this->attributes['value'] = (string)$this->backup[$this->attributes['name'] ?? ''];
 		return (new Markup\NormalizedElement(
 			new Markup\HtmlTag('input', $this->attributes()),
 			new Markup\EmptyElement()

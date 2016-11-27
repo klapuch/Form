@@ -13,23 +13,57 @@ require __DIR__ . '/../bootstrap.php';
 
 final class Input extends Tester\TestCase {
 	public function testRenderingKnownAttributes() {
+		$storage = [];
 		Assert::same(
 			'<input type="text" name="surname"/>',
-			(new Form\SafeInput(['type' => 'text', 'name' => 'surname']))->render()
+			(new Form\SafeInput(
+				['type' => 'text', 'name' => 'surname'],
+				new Form\Backup($storage)
+			))->render()
 		);
 	}
 
 	public function testRenderingUnknownAttributes() {
+		$storage = [];
 		Assert::same(
 			'<input foo="bar" name="surname"/>',
-			(new Form\SafeInput(['foo' => 'bar', 'name' => 'surname']))->render()
+			(new Form\SafeInput(
+				['foo' => 'bar', 'name' => 'surname'],
+				new Form\Backup($storage)
+			))->render()
 		);
 	}
 
 	public function testProtectingAgainstXss() {
+		$storage = [];
 		Assert::same(
 			'<input type="&quot;\'&lt;&gt;"/>',
-			(new Form\SafeInput(['type' => '"\'<>']))->render()
+			(new Form\SafeInput(
+				['type' => '"\'<>'],
+				new Form\Backup($storage)
+			))->render()
+		);
+	}
+
+	public function testPassingValue() {
+		$storage = ['surname' => 'myself'];
+		Assert::same(
+			'<input foo="bar" name="surname" value="myself"/>',
+			(new Form\SafeInput(
+				['foo' => 'bar', 'name' => 'surname'],
+				new Form\Backup($storage)
+			))->render()
+		);
+	}
+
+	public function testOverwritingValue() {
+		$storage = ['surname' => 'myself'];
+		Assert::same(
+			'<input foo="bar" name="surname" value="myself"/>',
+			(new Form\SafeInput(
+				['foo' => 'bar', 'name' => 'surname', 'value' => 'you'],
+				new Form\Backup($storage)
+			))->render()
 		);
 	}
 }
