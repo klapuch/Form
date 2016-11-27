@@ -5,7 +5,7 @@ namespace Klapuch\Form;
 use Klapuch\Markup;
 
 /**
- * Linked label to input
+ * Label linked to particular input
  */
 final class LinkedLabel implements Label {
 	private const FREE = '';
