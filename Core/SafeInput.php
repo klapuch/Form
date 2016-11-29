@@ -30,14 +30,13 @@ final class SafeInput implements Control {
 	private function attributes(): Markup\Attributes {
 		return new Markup\HtmlAttributes(
 			...array_map(
-				function(string $name, string $value): Markup\Attribute {
+				function(string $name): Markup\Attribute {
 					return new Markup\HtmlAttribute(
 						$name,
 						htmlspecialchars($this->attributes[$name], ENT_QUOTES)
 					);
 				},
-				array_keys($this->attributes),
-				$this->attributes
+				array_keys($this->attributes)
 			)
 		);
 	}
