@@ -8,4 +8,11 @@ interface Control {
 	 * @return string
 	 */
 	public function render(): string;
+
+	/**
+	 * Validate the control
+	 * @throws \UnexpectedValueException
+	 * @return void
+	 */
+	public function validate(): void;
 }

@@ -8,17 +8,18 @@ use Klapuch\Csrf;
  * Input as a protection against CSRF
  */
 final class CsrfInput implements Control {
-	private $session;
-	private $post;
+	private $csrf;
 
-	public function __construct(array &$session, array $post) {
-		$this->session = $session;
-		$this->post = $post;
+	public function __construct(Csrf\Csrf $csrf) {
+		$this->csrf = $csrf;
 	}
 
 	public function render(): string {
-		return (new Csrf\CsrfInput(
-			new Csrf\StoredCsrf($this->session, $this->post, [])
-		))->protection();
+		return (new Csrf\CsrfInput($this->csrf))->protection();
+	}
+
+	public function validate(): void {
+		if($this->csrf->abused())
+			throw new \UnexpectedValueException('Timeout');
 	}
 }

@@ -40,6 +40,20 @@ final class RawForm extends Tester\TestCase {
 			))->render()
 		);
 	}
+
+	public function testValidating() {
+		Assert::exception(function() {
+			(new Form\RawForm(
+				[],
+				new Form\FakeControl(null, null),
+				new Form\FakeControl(null, null),
+				new Form\FakeControl(null, null),
+				new Form\FakeControl(null, new \DomainException('foo')),
+				new Form\FakeControl(null, null),
+				new Form\FakeControl(null, new \DomainException('bar'))
+			))->validate();
+		}, \DomainException::class, 'foo');
+	}
 }
 
 (new RawForm())->run();

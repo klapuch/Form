@@ -17,4 +17,8 @@ final class BoundControl implements Control {
 	public function render(): string {
 		return $this->label->render() . $this->origin->render();
 	}
+
+	public function validate(): void {
+		$this->origin->validate();
+	}
 }

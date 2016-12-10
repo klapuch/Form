@@ -37,4 +37,8 @@ final class BootstrapInput implements Control {
 			)
 		))->render();
 	}
+
+	public function validate(): void {
+		$this->origin->validate();
+	}
 }

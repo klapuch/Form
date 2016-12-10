@@ -23,6 +23,11 @@ final class RawForm implements Control {
 		))->markup();
 	}
 
+	public function validate(): void {
+		foreach($this->controls as $control)
+			$control->validate();
+	}
+
 	private function attributes(): Markup\Attributes {
 		return new Markup\HtmlAttributes(
 			...array_map(

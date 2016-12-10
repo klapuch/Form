@@ -22,4 +22,8 @@ final class WrappedControl implements Control {
 			new Markup\FakeElement($this->origin->render())
 		))->markup();
 	}
+
+	public function validate(): void {
+		$this->origin->validate();
+	}
 }

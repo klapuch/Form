@@ -5,7 +5,9 @@
  */
 namespace Klapuch\Form\Unit;
 
-use Klapuch\Form;
+use Klapuch\{
+	Form, Validation
+};
 use Tester;
 use Tester\Assert;
 
@@ -18,7 +20,8 @@ final class Input extends Tester\TestCase {
 			'<input type="text" name="surname"/>',
 			(new Form\SafeInput(
 				['type' => 'text', 'name' => 'surname'],
-				new Form\Backup($storage)
+				new Form\Storage($storage, []),
+				new Validation\FakeRule()
 			))->render()
 		);
 	}
@@ -29,18 +32,8 @@ final class Input extends Tester\TestCase {
 			'<input foo="bar" name="surname"/>',
 			(new Form\SafeInput(
 				['foo' => 'bar', 'name' => 'surname'],
-				new Form\Backup($storage)
-			))->render()
-		);
-	}
-
-	public function testProtectingAgainstXss() {
-		$storage = [];
-		Assert::same(
-			'<input type="&quot;\'&lt;&gt;"/>',
-			(new Form\SafeInput(
-				['type' => '"\'<>'],
-				new Form\Backup($storage)
+				new Form\Storage($storage, []),
+				new Validation\FakeRule()
 			))->render()
 		);
 	}
@@ -51,9 +44,28 @@ final class Input extends Tester\TestCase {
 			'<input foo="bar" name="surname" value="myself"/>',
 			(new Form\SafeInput(
 				['foo' => 'bar', 'name' => 'surname'],
-				new Form\Backup($storage)
+				new Form\Storage($storage, []),
+				new Validation\FakeRule()
 			))->render()
 		);
+	}
+
+	public function testValidating() {
+		$storage = ['surname' => 'myself'];
+		Assert::exception(function() use($storage) {
+			(new Form\SafeInput(
+				['foo' => 'bar', 'name' => 'surname'],
+				new Form\Storage($storage, []),
+				new Validation\FakeRule(null, new \DomainException('foo'))
+			))->validate();
+		}, \DomainException::class, 'foo');
+		Assert::noError(function() use($storage) {
+			(new Form\SafeInput(
+				['foo' => 'bar', 'name' => 'LASTNAME'],
+				new Form\Storage($storage, []),
+				new Validation\FakeRule(null, new \DomainException('foo'))
+			))->validate();
+		});
 	}
 
 	public function testPassingStatedValue() {
@@ -62,7 +74,8 @@ final class Input extends Tester\TestCase {
 			'<input foo="bar" name="surname" value="myself"/>',
 			(new Form\SafeInput(
 				['foo' => 'bar', 'name' => 'surname', 'value' => 'myself'],
-				new Form\Backup($storage)
+				new Form\Storage($storage, []),
+				new Validation\FakeRule()
 			))->render()
 		);
 	}
@@ -73,7 +86,8 @@ final class Input extends Tester\TestCase {
 			'<input foo="bar" name="surname" value="myself"/>',
 			(new Form\SafeInput(
 				['foo' => 'bar', 'name' => 'surname', 'value' => 'you'],
-				new Form\Backup($storage)
+				new Form\Storage($storage, []),
+				new Validation\FakeRule()
 			))->render()
 		);
 	}
@@ -84,14 +98,16 @@ final class Input extends Tester\TestCase {
 			'<input foo="bar" name="surname" value="myself"/>',
 			(new Form\SafeInput(
 				['foo' => 'bar', 'name' => 'surname', 'value' => 'you'],
-				new Form\Backup($storage)
+				new Form\Storage($storage, []),
+				new Validation\FakeRule()
 			))->render()
 		);
 		Assert::same(
 			'<input foo="bar" name="surname" value="you"/>',
 			(new Form\SafeInput(
 				['foo' => 'bar', 'name' => 'surname', 'value' => 'you'],
-				new Form\Backup($storage)
+				new Form\Storage($storage, []),
+				new Validation\FakeRule()
 			))->render()
 		);
 	}
