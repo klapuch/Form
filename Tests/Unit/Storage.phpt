@@ -85,6 +85,16 @@ final class Storage extends Tester\TestCase {
 		Assert::count(1, $backup);
 		Assert::same('baz', $storage['foo']);
 	}
+
+	public function testBackupUnknownSource() {
+		$backup = ['foo' => 'bar'];
+		$source = ['foo' => 'baz', 'b' => '2'];
+		$storage = new Form\Storage($backup, $source);
+		$storage->backup('c');
+		Assert::count(2, $backup);
+		Assert::same('baz', $storage['foo']);
+		Assert::null($storage['c']);
+	}
 }
 
 (new Storage())->run();

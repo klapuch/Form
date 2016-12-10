@@ -39,7 +39,7 @@ final class Storage implements \ArrayAccess {
 	 * @return void
 	 */
 	public function backup($name): void {
-		$this->backup[self::SECTION][$name] = $this->source[self::SECTION][$name];
+		$this->backup[self::SECTION][$name] = $this[$name];
 	}
 
 	/**

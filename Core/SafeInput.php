@@ -28,7 +28,7 @@ final class SafeInput implements Control {
 	}
 
 	public function render(): string {
-		$name = $this->attributes['name'] ?? '';
+		$name = $this->attributes['name'] ?? null;
 		if(isset($this->storage[$name]))
 			$this->attributes['value'] = $this->storage[$name];
 		unset($this->storage[$name]);
@@ -39,7 +39,10 @@ final class SafeInput implements Control {
 	}
 
 	public function validate(): void {
-		['type' => $type, 'name' => $name] = $this->attributes;
+		[$type, $name] = [
+			$this->attributes['type'] ?? null,
+			$this->attributes['name'] ?? null
+		];
 		if(isset($this->storage[$name]))
 			$this->rule->apply($this->storage[$name]);
 		if(!in_array($type, self::IGNORED_BACKUPS, true))

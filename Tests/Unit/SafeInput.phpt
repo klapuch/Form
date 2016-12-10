@@ -70,6 +70,18 @@ final class Input extends Tester\TestCase {
 		});
 	}
 
+	public function testValidatingWithEmptyAttributes() {
+		$backup = ['surname' => 'myself'];
+		Assert::noError(function() use($backup) {
+			(new Form\SafeInput(
+				[],
+				new Form\Storage($backup, ['surname' => 'BAR']),
+				new Validation\FakeRule(null, null)
+			))->validate();
+		});
+	}
+
+
 	public function testIgnoredBackups() {
 		$backup = ['surname' => 'myself'];
 		Assert::exception(function() use($backup) {
