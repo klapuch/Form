@@ -40,14 +40,10 @@ final class SafeInput implements Control {
 
 	public function validate(): void {
 		['type' => $type, 'name' => $name] = $this->attributes;
-		try {
-			if(isset($this->storage[$name]))
-				$this->rule->apply($this->storage[$name]);
-		} catch(\Throwable $exception) {
-			if(!in_array($type, self::IGNORED_BACKUPS, true))
-				$this->storage->backup($name);
-			throw $exception;
-		}
+		if(isset($this->storage[$name]))
+			$this->rule->apply($this->storage[$name]);
+		if(!in_array($type, self::IGNORED_BACKUPS, true))
+			$this->storage->backup($name);
 	}
 
 	private function attributes(): Markup\Attributes {

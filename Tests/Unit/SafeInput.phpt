@@ -66,7 +66,7 @@ final class Input extends Tester\TestCase {
 				new Form\Storage($backup, ['surname' => 'BAR']),
 				new Validation\FakeRule(null, null)
 			))->validate();
-			Assert::same('myself', $backup['surname']);
+			Assert::same('BAR', $backup['surname']);
 		});
 	}
 
