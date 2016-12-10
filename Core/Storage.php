@@ -3,7 +3,7 @@ declare(strict_types = 1);
 namespace Klapuch\Form;
 
 /**
- * Storage for manipulation with data in input fields
+ * Storage for manipulation with data in input fields and their backups
  */
 final class Storage implements \ArrayAccess {
 	private const SECTION = '_form';
@@ -33,6 +33,19 @@ final class Storage implements \ArrayAccess {
 		return $this->merge()[$name] ?? null;
 	}
 
+	/**
+	 * Backup the source
+	 * @param mixed $name
+	 * @return void
+	 */
+	public function backup($name): void {
+		$this->backup[self::SECTION][$name] = $this->source[self::SECTION][$name];
+	}
+
+	/**
+	 * Merged source with backup
+	 * @return array
+	 */
 	private function merge(): array {
 		return $this->source[self::SECTION] + $this->backup[self::SECTION];
 	}

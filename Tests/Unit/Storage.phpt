@@ -66,6 +66,25 @@ final class Storage extends Tester\TestCase {
 		unset($storage['foo']);
 		Assert::same([], $backup);
 	}
+
+	public function testBackup() {
+		$backup = ['foo' => 'bar'];
+		$source = ['a' => '1', 'b' => '2'];
+		$storage = new Form\Storage($backup, $source);
+		$storage->backup('a');
+		Assert::count(2, $backup);
+		Assert::same('bar', $storage['foo']);
+		Assert::same('1', $storage['a']);
+	}
+
+	public function testBackupWithOverwriting() {
+		$backup = ['foo' => 'bar'];
+		$source = ['foo' => 'baz', 'b' => '2'];
+		$storage = new Form\Storage($backup, $source);
+		$storage->backup('foo');
+		Assert::count(1, $backup);
+		Assert::same('baz', $storage['foo']);
+	}
 }
 
 (new Storage())->run();
