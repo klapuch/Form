@@ -41,7 +41,7 @@ final class SafeInput implements Control {
 	public function validate(): void {
 		[$type, $name] = [
 			$this->attributes['type'] ?? null,
-			$this->attributes['name'] ?? null
+			$this->attributes['name'] ?? null,
 		];
 		if(isset($this->storage[$name]))
 			$this->rule->apply($this->storage[$name]);
