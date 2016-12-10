@@ -13,6 +13,9 @@ final class SafeInput implements Control {
 	private $attributes;
 	private $storage;
 	private $rule;
+	private const IGNORED_BACKUPS = [
+		'password',
+	];
 
 	public function __construct(
 		array $attributes,
@@ -36,8 +39,15 @@ final class SafeInput implements Control {
 	}
 
 	public function validate(): void {
-		if(isset($this->storage[$this->attributes['name']]))
-			$this->rule->apply($this->storage[$this->attributes['name']]);
+		['type' => $type, 'name' => $name] = $this->attributes;
+		try {
+			if(isset($this->storage[$name]))
+				$this->rule->apply($this->storage[$name]);
+		} catch(\Throwable $exception) {
+			if(!in_array($type, self::IGNORED_BACKUPS, true))
+				$this->storage->backup($name);
+			throw $exception;
+		}
 	}
 
 	private function attributes(): Markup\Attributes {

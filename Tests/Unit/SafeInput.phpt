@@ -51,21 +51,35 @@ final class Input extends Tester\TestCase {
 	}
 
 	public function testValidating() {
-		$storage = ['surname' => 'myself'];
-		Assert::exception(function() use($storage) {
+		$backup = ['surname' => 'myself'];
+		Assert::exception(function() use($backup) {
 			(new Form\SafeInput(
-				['foo' => 'bar', 'name' => 'surname'],
-				new Form\Storage($storage, []),
+				['type' => 'text', 'name' => 'surname'],
+				new Form\Storage($backup, ['surname' => 'FOO']),
 				new Validation\FakeRule(null, new \DomainException('foo'))
 			))->validate();
+			Assert::same('FOO', $backup['surname']);
 		}, \DomainException::class, 'foo');
-		Assert::noError(function() use($storage) {
+		Assert::noError(function() use($backup) {
 			(new Form\SafeInput(
-				['foo' => 'bar', 'name' => 'LASTNAME'],
-				new Form\Storage($storage, []),
+				['type' => 'text', 'name' => 'surname'],
+				new Form\Storage($backup, ['surname' => 'BAR']),
+				new Validation\FakeRule(null, null)
+			))->validate();
+			Assert::same('myself', $backup['surname']);
+		});
+	}
+
+	public function testIgnoredBackups() {
+		$backup = ['surname' => 'myself'];
+		Assert::exception(function() use($backup) {
+			(new Form\SafeInput(
+				['type' => 'password', 'name' => 'surname'],
+				new Form\Storage($backup, ['surname' => 'FOO']),
 				new Validation\FakeRule(null, new \DomainException('foo'))
 			))->validate();
-		});
+			Assert::same('myself', $backup['surname']);
+		}, \DomainException::class, 'foo');
 	}
 
 	public function testPassingStatedValue() {
