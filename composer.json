@@ -15,7 +15,7 @@
 		"php": ">=7.1",
 		"klapuch/markup": "^1.0.0",
 		"klapuch/csrf": "^1.0.0",
-		"klapuch/validation": "^1.0.0"
+		"klapuch/validation": "^2.0.0"
 	},
 	"require-dev": {
 		"nette/tester": "^1.7",
