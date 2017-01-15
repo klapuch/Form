@@ -41,7 +41,7 @@ final class RawForm extends Tester\TestCase {
 		);
 	}
 
-	public function testValidating() {
+	public function testValidatingInOrder() {
 		Assert::exception(function() {
 			(new Form\RawForm(
 				[],
