@@ -97,12 +97,14 @@ final class Backup extends Tester\TestCase {
 	}
 
 	public function testDroppingSources() {
-		$backup = ['foo' => 'bar'];
+		$backup = ['foo' => 'bar', 'a' => '1', 'c' => '4', 'b' => time()];
 		$source = ['a' => '1', 'b' => '2'];
 		$storage = new Form\Backup($backup, $source);
-		Assert::count(1, $backup);
+		Assert::count(4, $backup);
 		$storage->drop();
-		Assert::count(0, $backup);
+		Assert::count(2, $backup);
+		Assert::same('bar', $storage['foo']);
+		Assert::same('4', $storage['c']);
 	}
 }
 
