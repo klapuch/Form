@@ -20,7 +20,7 @@ final class Input extends Tester\TestCase {
 			'<input type="text" name="surname"/>',
 			(new Form\SafeInput(
 				['type' => 'text', 'name' => 'surname'],
-				new Form\Storage($storage, []),
+				new Form\Backup($storage, []),
 				new Validation\FakeRule()
 			))->render()
 		);
@@ -32,7 +32,7 @@ final class Input extends Tester\TestCase {
 			'<input foo="bar" name="surname"/>',
 			(new Form\SafeInput(
 				['foo' => 'bar', 'name' => 'surname'],
-				new Form\Storage($storage, []),
+				new Form\Backup($storage, []),
 				new Validation\FakeRule()
 			))->render()
 		);
@@ -44,7 +44,7 @@ final class Input extends Tester\TestCase {
 			'<input foo="bar" name="surname" value="myself"/>',
 			(new Form\SafeInput(
 				['foo' => 'bar', 'name' => 'surname'],
-				new Form\Storage($storage, []),
+				new Form\Backup($storage, []),
 				new Validation\FakeRule()
 			))->render()
 		);
@@ -55,7 +55,7 @@ final class Input extends Tester\TestCase {
 		Assert::exception(function() use($backup) {
 			(new Form\SafeInput(
 				['type' => 'text', 'name' => 'surname'],
-				new Form\Storage($backup, ['surname' => 'FOO']),
+				new Form\Backup($backup, ['surname' => 'FOO']),
 				new Validation\FakeRule(null, new \DomainException('foo'))
 			))->validate();
 			Assert::same('FOO', $backup['surname']);
@@ -63,7 +63,7 @@ final class Input extends Tester\TestCase {
 		Assert::noError(function() use($backup) {
 			(new Form\SafeInput(
 				['type' => 'text', 'name' => 'surname'],
-				new Form\Storage($backup, ['surname' => 'BAR']),
+				new Form\Backup($backup, ['surname' => 'BAR']),
 				new Validation\FakeRule(null, null)
 			))->validate();
 			Assert::same('BAR', $backup['surname']);
@@ -75,7 +75,7 @@ final class Input extends Tester\TestCase {
 		Assert::noError(function() use($backup) {
 			(new Form\SafeInput(
 				[],
-				new Form\Storage($backup, ['surname' => 'BAR']),
+				new Form\Backup($backup, ['surname' => 'BAR']),
 				new Validation\FakeRule(null, null)
 			))->validate();
 		});
@@ -87,7 +87,7 @@ final class Input extends Tester\TestCase {
 		Assert::exception(function() use($backup) {
 			(new Form\SafeInput(
 				['type' => 'password', 'name' => 'surname'],
-				new Form\Storage($backup, ['surname' => 'FOO']),
+				new Form\Backup($backup, ['surname' => 'FOO']),
 				new Validation\FakeRule(null, new \DomainException('foo'))
 			))->validate();
 			Assert::same('myself', $backup['surname']);
@@ -100,7 +100,7 @@ final class Input extends Tester\TestCase {
 			'<input foo="bar" name="surname" value="myself"/>',
 			(new Form\SafeInput(
 				['foo' => 'bar', 'name' => 'surname', 'value' => 'myself'],
-				new Form\Storage($storage, []),
+				new Form\Backup($storage, []),
 				new Validation\FakeRule()
 			))->render()
 		);
@@ -112,7 +112,7 @@ final class Input extends Tester\TestCase {
 			'<input foo="bar" name="surname" value="myself"/>',
 			(new Form\SafeInput(
 				['foo' => 'bar', 'name' => 'surname', 'value' => 'you'],
-				new Form\Storage($storage, []),
+				new Form\Backup($storage, []),
 				new Validation\FakeRule()
 			))->render()
 		);
@@ -124,7 +124,7 @@ final class Input extends Tester\TestCase {
 			'<input foo="bar" name="surname" value="myself"/>',
 			(new Form\SafeInput(
 				['foo' => 'bar', 'name' => 'surname', 'value' => 'you'],
-				new Form\Storage($storage, []),
+				new Form\Backup($storage, []),
 				new Validation\FakeRule()
 			))->render()
 		);
@@ -132,7 +132,7 @@ final class Input extends Tester\TestCase {
 			'<input foo="bar" name="surname" value="you"/>',
 			(new Form\SafeInput(
 				['foo' => 'bar', 'name' => 'surname', 'value' => 'you'],
-				new Form\Storage($storage, []),
+				new Form\Backup($storage, []),
 				new Validation\FakeRule()
 			))->render()
 		);

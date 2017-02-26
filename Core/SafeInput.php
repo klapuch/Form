@@ -11,7 +11,7 @@ use Klapuch\{
  */
 final class SafeInput implements Control {
 	private $attributes;
-	private $storage;
+	private $backup;
 	private $rule;
 	private const IGNORED_BACKUPS = [
 		'password',
@@ -19,19 +19,19 @@ final class SafeInput implements Control {
 
 	public function __construct(
 		array $attributes,
-		Storage $storage,
+		Backup $backup,
 		Validation\Rule $rule
 	) {
 		$this->attributes = $attributes;
-		$this->storage = $storage;
+		$this->backup = $backup;
 		$this->rule = $rule;
 	}
 
 	public function render(): string {
 		$name = $this->attributes['name'] ?? null;
-		if(isset($this->storage[$name]))
-			$this->attributes['value'] = $this->storage[$name];
-		unset($this->storage[$name]);
+		if(isset($this->backup[$name]))
+			$this->attributes['value'] = $this->backup[$name];
+		unset($this->backup[$name]);
 		return (new Markup\NormalizedElement(
 			new Markup\HtmlTag('input', $this->attributes()),
 			new Markup\EmptyElement()
@@ -43,10 +43,10 @@ final class SafeInput implements Control {
 			$this->attributes['type'] ?? null,
 			$this->attributes['name'] ?? null,
 		];
-		if(isset($this->storage[$name]))
-			$this->rule->apply($this->storage[$name]);
+		if(isset($this->backup[$name]))
+			$this->rule->apply($this->backup[$name]);
 		if(!in_array($type, self::IGNORED_BACKUPS, true))
-			$this->storage->backup($name);
+			$this->backup->archive($name);
 	}
 
 	private function attributes(): Markup\Attributes {
