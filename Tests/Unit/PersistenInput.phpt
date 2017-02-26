@@ -13,12 +13,12 @@ use Tester\Assert;
 
 require __DIR__ . '/../bootstrap.php';
 
-final class Input extends Tester\TestCase {
+final class PersistentInput extends Tester\TestCase {
 	public function testRenderingKnownAttributes() {
 		$storage = [];
 		Assert::same(
 			'<input type="text" name="surname"/>',
-			(new Form\SafeInput(
+			(new Form\PersistentInput(
 				['type' => 'text', 'name' => 'surname'],
 				new Form\Backup($storage, []),
 				new Validation\FakeRule()
@@ -30,7 +30,7 @@ final class Input extends Tester\TestCase {
 		$storage = [];
 		Assert::same(
 			'<input foo="bar" name="surname"/>',
-			(new Form\SafeInput(
+			(new Form\PersistentInput(
 				['foo' => 'bar', 'name' => 'surname'],
 				new Form\Backup($storage, []),
 				new Validation\FakeRule()
@@ -42,7 +42,7 @@ final class Input extends Tester\TestCase {
 		$storage = ['surname' => 'myself'];
 		Assert::same(
 			'<input foo="bar" name="surname" value="myself"/>',
-			(new Form\SafeInput(
+			(new Form\PersistentInput(
 				['foo' => 'bar', 'name' => 'surname'],
 				new Form\Backup($storage, []),
 				new Validation\FakeRule()
@@ -53,7 +53,7 @@ final class Input extends Tester\TestCase {
 	public function testValidating() {
 		$backup = ['surname' => 'myself'];
 		Assert::exception(function() use($backup) {
-			(new Form\SafeInput(
+			(new Form\PersistentInput(
 				['type' => 'text', 'name' => 'surname'],
 				new Form\Backup($backup, ['surname' => 'FOO']),
 				new Validation\FakeRule(null, new \DomainException('foo'))
@@ -61,7 +61,7 @@ final class Input extends Tester\TestCase {
 			Assert::same('FOO', $backup['surname']);
 		}, \DomainException::class, 'foo');
 		Assert::noError(function() use($backup) {
-			(new Form\SafeInput(
+			(new Form\PersistentInput(
 				['type' => 'text', 'name' => 'surname'],
 				new Form\Backup($backup, ['surname' => 'BAR']),
 				new Validation\FakeRule(null, null)
@@ -73,7 +73,7 @@ final class Input extends Tester\TestCase {
 	public function testValidatingWithEmptyAttributes() {
 		$backup = ['surname' => 'myself'];
 		Assert::noError(function() use($backup) {
-			(new Form\SafeInput(
+			(new Form\PersistentInput(
 				[],
 				new Form\Backup($backup, ['surname' => 'BAR']),
 				new Validation\FakeRule(null, null)
@@ -83,7 +83,7 @@ final class Input extends Tester\TestCase {
 
 	public function testIgnoredBackups() {
 		$backup = ['surname' => 'myself'];
-		(new Form\SafeInput(
+		(new Form\PersistentInput(
 			['type' => 'password', 'name' => 'surname'],
 			new Form\Backup($backup, ['surname' => 'FOO']),
 			new Validation\FakeRule()
@@ -93,7 +93,7 @@ final class Input extends Tester\TestCase {
 
 	public function testIgnoredBackupsWithStrictChecking() {
 		$backup = ['surname' => 'myself'];
-		(new Form\SafeInput(
+		(new Form\PersistentInput(
 			['type' => 'true', 'name' => 'surname'],
 			new Form\Backup($backup, ['surname' => 'FOO']),
 			new Validation\FakeRule()
@@ -105,7 +105,7 @@ final class Input extends Tester\TestCase {
 		$storage = [];
 		Assert::same(
 			'<input foo="bar" name="surname" value="myself"/>',
-			(new Form\SafeInput(
+			(new Form\PersistentInput(
 				['foo' => 'bar', 'name' => 'surname', 'value' => 'myself'],
 				new Form\Backup($storage, []),
 				new Validation\FakeRule()
@@ -117,7 +117,7 @@ final class Input extends Tester\TestCase {
 		$storage = ['surname' => 'myself'];
 		Assert::same(
 			'<input foo="bar" name="surname" value="myself"/>',
-			(new Form\SafeInput(
+			(new Form\PersistentInput(
 				['foo' => 'bar', 'name' => 'surname', 'value' => 'you'],
 				new Form\Backup($storage, []),
 				new Validation\FakeRule()
@@ -126,4 +126,4 @@ final class Input extends Tester\TestCase {
 	}
 }
 
-(new Input())->run();
+(new PersistentInput())->run();

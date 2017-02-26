@@ -7,9 +7,9 @@ use Klapuch\{
 };
 
 /**
- * Safe input
+ * Persistent input in the storage
  */
-final class SafeInput implements Control {
+final class PersistentInput implements Control {
 	private $attributes;
 	private $backup;
 	private $rule;
