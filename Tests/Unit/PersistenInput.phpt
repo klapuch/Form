@@ -124,6 +124,26 @@ final class PersistentInput extends Tester\TestCase {
 			))->render()
 		);
 	}
+
+	public function testRemovingAfterPresenting() {
+		$storage = ['surname' => 'myself'];
+		Assert::same(
+			'<input foo="bar" name="surname" value="myself"/>',
+			(new Form\PersistentInput(
+				['foo' => 'bar', 'name' => 'surname', 'value' => 'you'],
+				new Form\Backup($storage, []),
+				new Validation\FakeRule()
+			))->render()
+		);
+		Assert::same(
+			'<input foo="bar" name="surname" value="you"/>',
+			(new Form\PersistentInput(
+				['foo' => 'bar', 'name' => 'surname', 'value' => 'you'],
+				new Form\Backup($storage, []),
+				new Validation\FakeRule()
+			))->render()
+		);
+	}
 }
 
 (new PersistentInput())->run();
