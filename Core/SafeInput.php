@@ -31,7 +31,6 @@ final class SafeInput implements Control {
 		$name = $this->attributes['name'] ?? null;
 		if(isset($this->backup[$name]))
 			$this->attributes['value'] = $this->backup[$name];
-		unset($this->backup[$name]);
 		return (new Markup\NormalizedElement(
 			new Markup\HtmlTag('input', $this->attributes()),
 			new Markup\EmptyElement()

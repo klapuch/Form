@@ -117,26 +117,6 @@ final class Input extends Tester\TestCase {
 			))->render()
 		);
 	}
-
-	public function testRemovingAfterPresenting() {
-		$storage = ['surname' => 'myself'];
-		Assert::same(
-			'<input foo="bar" name="surname" value="myself"/>',
-			(new Form\SafeInput(
-				['foo' => 'bar', 'name' => 'surname', 'value' => 'you'],
-				new Form\Backup($storage, []),
-				new Validation\FakeRule()
-			))->render()
-		);
-		Assert::same(
-			'<input foo="bar" name="surname" value="you"/>',
-			(new Form\SafeInput(
-				['foo' => 'bar', 'name' => 'surname', 'value' => 'you'],
-				new Form\Backup($storage, []),
-				new Validation\FakeRule()
-			))->render()
-		);
-	}
 }
 
 (new Input())->run();
