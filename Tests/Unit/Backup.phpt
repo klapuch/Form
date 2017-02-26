@@ -95,6 +95,15 @@ final class Backup extends Tester\TestCase {
 		Assert::same('baz', $storage['foo']);
 		Assert::null($storage['c']);
 	}
+
+	public function testDroppingSources() {
+		$backup = ['foo' => 'bar'];
+		$source = ['a' => '1', 'b' => '2'];
+		$storage = new Form\Backup($backup, $source);
+		Assert::count(1, $backup);
+		$storage->drop();
+		Assert::count(0, $backup);
+	}
 }
 
 (new Backup())->run();

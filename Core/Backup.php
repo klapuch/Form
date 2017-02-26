@@ -43,6 +43,15 @@ final class Backup implements \ArrayAccess {
 	}
 
 	/**
+	 * Drop everything in the backup
+	 * @return void
+	 */
+	public function drop(): void {
+		foreach(array_keys($this->storage[self::SECTION]) as $name)
+			unset($this[$name]);
+	}
+
+	/**
 	 * Merged source with backup
 	 * @return array
 	 */
