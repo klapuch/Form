@@ -81,17 +81,24 @@ final class Input extends Tester\TestCase {
 		});
 	}
 
-
 	public function testIgnoredBackups() {
 		$backup = ['surname' => 'myself'];
-		Assert::exception(function() use($backup) {
-			(new Form\SafeInput(
-				['type' => 'password', 'name' => 'surname'],
-				new Form\Backup($backup, ['surname' => 'FOO']),
-				new Validation\FakeRule(null, new \DomainException('foo'))
-			))->validate();
-			Assert::same('myself', $backup['surname']);
-		}, \DomainException::class, 'foo');
+		(new Form\SafeInput(
+			['type' => 'password', 'name' => 'surname'],
+			new Form\Backup($backup, ['surname' => 'FOO']),
+			new Validation\FakeRule()
+		))->validate();
+		Assert::same('myself', $backup['surname']);
+	}
+
+	public function testIgnoredBackupsWithStrictChecking() {
+		$backup = ['surname' => 'myself'];
+		(new Form\SafeInput(
+			['type' => 'true', 'name' => 'surname'],
+			new Form\Backup($backup, ['surname' => 'FOO']),
+			new Validation\FakeRule()
+		))->validate();
+		Assert::same('FOO', $backup['surname']);
 	}
 
 	public function testPassingStatedValue() {
