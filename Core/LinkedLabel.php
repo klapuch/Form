@@ -19,10 +19,10 @@ final class LinkedLabel implements Label {
 
 	public function render(): string {
 		return (new Markup\NormalizedElement(
-			new Markup\HtmlTag(
+			new Markup\ValidTag(
 				'label',
-				new Markup\HtmlAttributes(
-					new Markup\HtmlAttribute('for', $this->for)
+					new Markup\ConcatenatedAttributes(
+					new Markup\SafeAttribute('for', $this->for)
 				)
 			),
 			new Markup\TextElement($this->content)

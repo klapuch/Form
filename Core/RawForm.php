@@ -18,7 +18,7 @@ final class RawForm implements Control {
 
 	public function render(): string {
 		return (new Markup\NormalizedElement(
-			new Markup\HtmlTag('form', $this->attributes()),
+			new Markup\ValidTag('form', $this->attribute()),
 			new Markup\FakeElement($this->children())
 		))->markup();
 	}
@@ -28,11 +28,11 @@ final class RawForm implements Control {
 			$control->validate();
 	}
 
-	private function attributes(): Markup\Attributes {
-		return new Markup\HtmlAttributes(
+	private function attribute(): Markup\Attribute {
+		return new Markup\ConcatenatedAttributes(
 			...array_map(
 				function(string $name): Markup\Attribute {
-					return new Markup\HtmlAttribute(
+					return new Markup\SafeAttribute(
 						$name,
 						$this->attributes[$name]
 					);

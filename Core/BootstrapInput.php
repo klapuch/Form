@@ -20,19 +20,19 @@ final class BootstrapInput implements Control {
 		return (new WrappedControl(
 			new WrappedControl(
 				$this->origin,
-				new Markup\HtmlTag(
+				new Markup\ValidTag(
 					'div',
-					new Markup\HtmlAttributes(
-						new Markup\HtmlAttribute(
+					new Markup\ConcatenatedAttributes(
+						new Markup\SafeAttribute(
 							'class', sprintf('col-sm-%d', $this->columns)
 						)
 					)
 				)
 			),
-			new Markup\HtmlTag(
+			new Markup\ValidTag(
 				'div',
-				new Markup\HtmlAttributes(
-					new Markup\HtmlAttribute('class', 'form-group')
+				new Markup\ConcatenatedAttributes(
+					new Markup\SafeAttribute('class', 'form-group')
 				)
 			)
 		))->render();

@@ -33,7 +33,7 @@ final class PersistentInput implements Control {
 			$this->attributes['value'] = $this->backup[$name];
 		unset($this->backup[$name]);
 		return (new Markup\NormalizedElement(
-			new Markup\HtmlTag('input', $this->attributes()),
+			new Markup\ValidTag('input', $this->attribute()),
 			new Markup\EmptyElement()
 		))->markup();
 	}
@@ -49,11 +49,11 @@ final class PersistentInput implements Control {
 			$this->backup->archive($name);
 	}
 
-	private function attributes(): Markup\Attributes {
-		return new Markup\HtmlAttributes(
+	private function attribute(): Markup\Attribute {
+		return new Markup\ConcatenatedAttributes(
 			...array_map(
 				function(string $name, string $value): Markup\Attribute {
-					return new Markup\HtmlAttribute($name, $value);
+					return new Markup\SafeAttribute($name, $value);
 				},
 				array_keys($this->attributes),
 				$this->attributes
