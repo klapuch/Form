@@ -19,9 +19,18 @@ final class XslInput implements Control {
 	public function render(): string {
 		return (new Markup\NormalizedElement(
 			new Markup\ValidTag(
-				'xsl:element', new Markup\SafeAttribute('name', 'input')
+				'xsl:stylesheet',
+				new Markup\ConcatenatedAttribute(
+					new Markup\SafeAttribute('version', '1.0'),
+					new Markup\SafeAttribute('xmlns:xsl', 'http://www.w3.org/1999/XSL/Transform')
+				)
 			),
-			$this->attribute($this->attributes)
+			new Markup\NormalizedElement(
+				new Markup\ValidTag(
+					'xsl:element', new Markup\SafeAttribute('name', 'input')
+				),
+				$this->attribute($this->attributes)
+			)
 		))->markup();
 	}
 
