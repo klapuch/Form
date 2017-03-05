@@ -22,7 +22,7 @@ final class BootstrapInput implements Control {
 				$this->origin,
 				new Markup\ValidTag(
 					'div',
-					new Markup\ConcatenatedAttributes(
+					new Markup\ConcatenatedAttribute(
 						new Markup\SafeAttribute(
 							'class', sprintf('col-sm-%d', $this->columns)
 						)
@@ -31,7 +31,7 @@ final class BootstrapInput implements Control {
 			),
 			new Markup\ValidTag(
 				'div',
-				new Markup\ConcatenatedAttributes(
+				new Markup\ConcatenatedAttribute(
 					new Markup\SafeAttribute('class', 'form-group')
 				)
 			)

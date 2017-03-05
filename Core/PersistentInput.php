@@ -48,7 +48,7 @@ final class PersistentInput implements Control {
 	}
 
 	private function attribute(): Markup\Attribute {
-		return new Markup\ConcatenatedAttributes(
+		return new Markup\ConcatenatedAttribute(
 			...array_map(
 				function(string $name, string $value): Markup\Attribute {
 					return new Markup\SafeAttribute($name, $value);
