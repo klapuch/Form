@@ -8,18 +8,18 @@ use Klapuch\Markup;
  * Raw form
  */
 final class RawForm implements Control {
-	private $attributes;
+	private $attribute;
 	private $controls;
 
-	public function __construct(array $attributes, Control ...$controls) {
-		$this->attributes = $attributes;
+	public function __construct(Markup\Attribute $attribute, Control ...$controls) {
+		$this->attribute = $attribute;
 		$this->controls = $controls;
 	}
 
 	public function render(): string {
 		return (new Markup\NormalizedElement(
-			new Markup\ValidTag('form', $this->attribute()),
-			new Markup\FakeElement($this->children())
+			new Markup\ValidTag('form', $this->attribute),
+			new Markup\FakeElement($this->children($this->controls))
 		))->markup();
 	}
 
@@ -28,27 +28,13 @@ final class RawForm implements Control {
 			$control->validate();
 	}
 
-	private function attribute(): Markup\Attribute {
-		return new Markup\ConcatenatedAttributes(
-			...array_map(
-				function(string $name): Markup\Attribute {
-					return new Markup\SafeAttribute(
-						$name,
-						$this->attributes[$name]
-					);
-				},
-				array_keys($this->attributes)
-			)
-		);
-	}
-
-	private function children(): string {
+	private function children(array $controls): string {
 		return implode(
 			array_map(
 				function(Control $control): string {
 					return $control->render();
 				},
-				$this->controls
+				$controls
 			)
 		);
 	}
