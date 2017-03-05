@@ -13,9 +13,7 @@ final class PersistentInput implements Control {
 	private $attributes;
 	private $backup;
 	private $rule;
-	private const IGNORED_BACKUPS = [
-		'password',
-	];
+	private const IGNORED_BACKUPS = ['password'];
 
 	public function __construct(
 		array $attributes,
