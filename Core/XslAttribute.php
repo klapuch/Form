@@ -30,4 +30,6 @@ abstract class XslAttribute {
 			new Markup\SafeAttribute('name', $this->name())
 		);
 	}
+
+	abstract public function element(): Markup\Element;
 }
