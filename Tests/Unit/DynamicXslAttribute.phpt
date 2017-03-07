@@ -31,6 +31,16 @@ final class DynamicXslAttribute extends Tester\TestCase {
 			$attribute->element()->markup()
 		);
 	}
+
+	public function testXssProtection() {
+		$attribute = new Form\DynamicXslAttribute('<">', '<">');
+		Assert::same('<">', $attribute->name());
+		Assert::same('<">', $attribute->value());
+		Assert::same(
+			'<xsl:attribute name="&lt;&quot;&gt;"><xsl:value-of select="&lt;&quot;&gt;"/></xsl:attribute>',
+			$attribute->element()->markup()
+		);
+	}
 }
 
 (new DynamicXslAttribute())->run();

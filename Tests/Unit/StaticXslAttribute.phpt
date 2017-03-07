@@ -21,6 +21,16 @@ final class StaticXslAttribute extends Tester\TestCase {
 			$attribute->element()->markup()
 		);
 	}
+
+	public function testXssProtection() {
+		$attribute = new Form\StaticXslAttribute('<">', '<">');
+		Assert::same('<">', $attribute->name());
+		Assert::same('<">', $attribute->value());
+		Assert::same(
+			'<xsl:attribute name="&lt;&quot;&gt;"><xsl:text>&lt;"&gt;</xsl:text></xsl:attribute>',
+			$attribute->element()->markup()
+		);
+	}
 }
 
 (new StaticXslAttribute())->run();
