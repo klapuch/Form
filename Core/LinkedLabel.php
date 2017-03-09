@@ -21,7 +21,7 @@ final class LinkedLabel implements Label {
 		return (new Markup\NormalizedElement(
 			new Markup\ValidTag(
 				'label',
-					new Markup\ConcatenatedAttribute(
+				new Markup\ConcatenatedAttribute(
 					new Markup\SafeAttribute('for', $this->for)
 				)
 			),
