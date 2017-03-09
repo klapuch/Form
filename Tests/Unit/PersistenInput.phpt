@@ -58,7 +58,6 @@ final class PersistentInput extends Tester\TestCase {
 				new Form\Backup($backup, ['surname' => 'FOO']),
 				new Validation\FakeRule(null, new \DomainException('foo'))
 			))->validate();
-			Assert::same('FOO', $backup['surname']);
 		}, \DomainException::class, 'foo');
 		Assert::noError(function() use($backup) {
 			(new Form\PersistentInput(
@@ -79,26 +78,6 @@ final class PersistentInput extends Tester\TestCase {
 				new Validation\FakeRule(null, null)
 			))->validate();
 		});
-	}
-
-	public function testIgnoredBackups() {
-		$backup = ['surname' => 'myself'];
-		(new Form\PersistentInput(
-			['type' => 'password', 'name' => 'surname'],
-			new Form\Backup($backup, ['surname' => 'FOO']),
-			new Validation\FakeRule()
-		))->validate();
-		Assert::same('myself', $backup['surname']);
-	}
-
-	public function testIgnoredBackupsWithStrictChecking() {
-		$backup = ['surname' => 'myself'];
-		(new Form\PersistentInput(
-			['type' => 'true', 'name' => 'surname'],
-			new Form\Backup($backup, ['surname' => 'FOO']),
-			new Validation\FakeRule()
-		))->validate();
-		Assert::same('FOO', $backup['surname']);
 	}
 
 	public function testPassingStatedValue() {

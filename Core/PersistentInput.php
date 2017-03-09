@@ -13,7 +13,6 @@ final class PersistentInput implements Control {
 	private $attributes;
 	private $backup;
 	private $rule;
-	private const IGNORED_BACKUPS = ['password'];
 
 	public function __construct(
 		array $attributes,
@@ -43,8 +42,7 @@ final class PersistentInput implements Control {
 		];
 		if(isset($this->backup[$name]))
 			$this->rule->apply($this->backup[$name]);
-		if(!in_array($type, self::IGNORED_BACKUPS, true))
-			$this->backup->archive($name);
+		$this->backup->archive($name);
 	}
 
 	private function attribute(): Markup\Attribute {

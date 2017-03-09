@@ -12,13 +12,11 @@ use Tester\Assert;
 require __DIR__ . '/../bootstrap.php';
 
 final class Backup extends Tester\TestCase {
-	/**
-	 * @throws \InvalidArgumentException Offset must be named
-	 */
-	public function testUnnamedIndex() {
+	public function testIgnoringUnnamedIndex() {
 		$backup = [];
 		$storage = new Form\Backup($backup, []);
 		$storage[] = 'foo';
+		Assert::count(0, $backup);
 	}
 
 	public function testNamedIndex() {
@@ -105,6 +103,24 @@ final class Backup extends Tester\TestCase {
 		Assert::count(2, $backup);
 		Assert::same('bar', $storage['foo']);
 		Assert::same('4', $storage['c']);
+	}
+
+	public function testIgnoringArchivingForSpecificKeys() {
+		$backup = [];
+		$source = ['password' => 'heslo'];
+		$storage = new Form\Backup($backup, $source);
+		$storage->archive('password');
+		$storage->password = 'heslo';
+		Assert::count(0, $backup);
+	}
+
+	public function testIgnoringArchivingForSpecificKeysWithStrictCheck() {
+		$backup = [];
+		$source = ['true' => 'heslo'];
+		$storage = new Form\Backup($backup, $source);
+		$storage->archive(true);
+		$storage->true = 'heslo';
+		Assert::count(1, $backup);
 	}
 }
 

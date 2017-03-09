@@ -6,6 +6,7 @@ namespace Klapuch\Form;
  * Storage for manipulation with data in input fields and their backups
  */
 final class Backup implements \ArrayAccess {
+	private const IGNORED_BACKUPS = ['password'];
 	private const SECTION = '_form';
 	private $storage;
 	private $source;
@@ -16,9 +17,8 @@ final class Backup implements \ArrayAccess {
 	}
 
 	public function offsetSet($name, $value) {
-		if($name === null)
-			throw new \InvalidArgumentException('Offset must be named');
-		$this->storage[self::SECTION][$name] = $value;
+		if($name && !in_array($name, self::IGNORED_BACKUPS, true))
+			$this->storage[self::SECTION][$name] = $value;
 	}
 
 	public function offsetExists($name) {
@@ -39,7 +39,7 @@ final class Backup implements \ArrayAccess {
 	 * @return void
 	 */
 	public function archive($name): void {
-		$this->storage[self::SECTION][$name] = $this[$name];
+		$this[$name] = $this[$name];
 	}
 
 	/**
