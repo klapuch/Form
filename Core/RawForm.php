@@ -29,13 +29,12 @@ final class RawForm implements Control {
 	}
 
 	private function children(array $controls): string {
-		return implode(
-			array_map(
-				function(Control $control): string {
-					return $control->render();
-				},
-				$controls
-			)
+		return array_reduce(
+			$controls,
+			function(string $children, Control $control): string {
+				return $children .= $control->render();
+			},
+			''
 		);
 	}
 }
