@@ -9,7 +9,7 @@ use Klapuch\{
 /**
  * Persistent input in the storage
  */
-final class PersistentInput implements Control {
+final class PersistentInput extends SafeControl {
 	private $attributes;
 	private $backup;
 	private $rule;
@@ -30,7 +30,7 @@ final class PersistentInput implements Control {
 			$this->attributes['value'] = $this->backup[$name];
 		unset($this->backup[$name]);
 		return (new Markup\NormalizedElement(
-			new Markup\ValidTag('input', $this->attribute()),
+			new Markup\ValidTag('input', $this->attribute($this->attributes)),
 			new Markup\EmptyElement()
 		))->markup();
 	}
@@ -43,17 +43,5 @@ final class PersistentInput implements Control {
 		if(isset($this->backup[$name]))
 			$this->rule->apply($this->backup[$name]);
 		$this->backup->archive($name);
-	}
-
-	private function attribute(): Markup\Attribute {
-		return new Markup\ConcatenatedAttribute(
-			...array_map(
-				function(string $name, string $value): Markup\Attribute {
-					return new Markup\SafeAttribute($name, $value);
-				},
-				array_keys($this->attributes),
-				$this->attributes
-			)
-		);
 	}
 }

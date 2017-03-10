@@ -7,7 +7,7 @@ use Klapuch\Markup;
 /**
  * Raw form
  */
-final class RawForm implements Control {
+final class RawForm extends SafeControl {
 	private $attributes;
 	private $controls;
 
@@ -35,20 +35,6 @@ final class RawForm implements Control {
 				return $children .= $control->render();
 			},
 			''
-		);
-	}
-
-	private function attribute(array $attributes): Markup\Attribute {
-		return new Markup\ConcatenatedAttribute(
-			...array_map(
-				function(string $name) use($attributes): Markup\Attribute {
-					return new Markup\SafeAttribute(
-						$name,
-						$attributes[$name]
-					);
-				},
-				array_keys($attributes)
-			)
 		);
 	}
 }
