@@ -6,7 +6,6 @@
 namespace Klapuch\Form\Unit;
 
 use Klapuch\Form;
-use Klapuch\Markup;
 use Tester;
 use Tester\Assert;
 
@@ -15,7 +14,7 @@ require __DIR__ . '/../bootstrap.php';
 final class RawForm extends Tester\TestCase {
 	public function testFormTags() {
 		$form = (new Form\RawForm(
-			new Markup\FakeAttribute('method="POST"'),
+			['method' => 'POST'],
 			new Form\FakeControl('')
 		))->render();
 		Assert::contains('<form ', $form);
@@ -24,7 +23,7 @@ final class RawForm extends Tester\TestCase {
 
 	public function testIncludingAttributes() {
 		$form = (new Form\RawForm(
-			new Markup\FakeAttribute('method="POST" action="/index.php"'),
+			['method' => 'POST', 'action' => '/index.php'],
 			new Form\FakeControl('')
 		))->render();
 		Assert::contains('POST', $form);
@@ -35,7 +34,7 @@ final class RawForm extends Tester\TestCase {
 		Assert::same(
 			'<form method="POST" action="/index.php"><input name="first"/><input name="second"/></form>',
 			(new Form\RawForm(
-				new Markup\FakeAttribute('method="POST" action="/index.php"'),
+				['method' => 'POST', 'action' => '/index.php'],
 				new Form\FakeControl('<input name="first"/>'),
 				new Form\FakeControl('<input name="second"/>')
 			))->render()
@@ -45,7 +44,7 @@ final class RawForm extends Tester\TestCase {
 	public function testValidatingInOrder() {
 		Assert::exception(function() {
 			(new Form\RawForm(
-				new Markup\FakeAttribute(),
+				[],
 				new Form\FakeControl(null, null),
 				new Form\FakeControl(null, null),
 				new Form\FakeControl(null, null),
