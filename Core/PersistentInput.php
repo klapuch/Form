@@ -36,10 +36,7 @@ final class PersistentInput extends SafeControl {
 	}
 
 	public function validate(): void {
-		[$type, $name] = [
-			$this->attributes['type'] ?? null,
-			$this->attributes['name'] ?? null,
-		];
+		$name = $this->attributes['name'] ?? null;
 		if(isset($this->backup[$name]))
 			$this->rule->apply($this->backup[$name]);
 		$this->backup->archive($name);
