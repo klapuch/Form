@@ -7,7 +7,7 @@ use Klapuch\Markup;
 /**
  * Raw form
  */
-final class RawForm extends SafeControl {
+final class RawForm implements Control {
 	private $attributes;
 	private $controls;
 
@@ -18,7 +18,7 @@ final class RawForm extends SafeControl {
 
 	public function render(): string {
 		return (new Markup\NormalizedElement(
-			new Markup\ValidTag('form', $this->attribute($this->attributes)),
+			new Markup\ValidTag('form', new Markup\ArrayAttribute($this->attributes)),
 			new Markup\FakeElement($this->children($this->controls))
 		))->markup();
 	}

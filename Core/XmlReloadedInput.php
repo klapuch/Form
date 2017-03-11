@@ -9,28 +9,28 @@ use Klapuch\{
 /**
  * Input reloaded from XML source
  */
-final class XmlReloadedInput extends SafeControl {
-	private $attributes;
-	private $dom;
+final class XmlReloadedInput extends Input {
+	private $xml;
 
-	public function __construct(array $attributes, \DOMDocument $dom) {
-		$this->attributes = $attributes;
-		$this->dom = $dom;
+	public function __construct(
+		array $attributes,
+		\DOMDocument $xml,
+		Backup $backup,
+		Validation\Rule $rule
+	) {
+		parent::__construct($attributes, $backup, $rule);
+		$this->xml = $xml;
 	}
 
 	public function render(): string {
 		$this->attributes['value'] = $this->value($this->attributes['name']);
 		return (new Markup\NormalizedElement(
-			new Markup\ValidTag('input', $this->attribute($this->attributes)),
+			new Markup\ValidTag('input', $this->attribute()),
 			new Markup\EmptyElement()
 		))->markup();
 	}
 
-	public function validate(): void {
-
-	}
-
 	private function value(string $name): string {
-		return (new \DOMXPath($this->dom))->evaluate(sprintf('string(/*/%s)', $name));
+		return (new \DOMXPath($this->xml))->evaluate(sprintf('string(/*/%s)', $name));
 	}
 }
