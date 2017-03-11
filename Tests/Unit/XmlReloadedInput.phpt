@@ -30,6 +30,15 @@ final class XmlReloadedInput extends Tester\TestCase {
 		);
 	}
 
+	public function testNoValueOnNoRelatedXmlElement() {
+		$dom = new \DOMDocument();
+		$dom->loadXML('<root><last_update>now</last_update></root>');
+		Assert::same(
+			'<input name="foo"/>',
+			(new Form\XmlReloadedInput(['name' => 'foo'], $dom))->render()
+		);
+	}
+
 	public function testRewritingValueByReloading() {
 		$dom = new \DOMDocument();
 		$dom->loadXML('<root><last_update>now</last_update></root>');
