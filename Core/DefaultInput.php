@@ -5,9 +5,9 @@ namespace Klapuch\Form;
 use Klapuch\Markup;
 
 /**
- * Persistent input in the storage
+ * Default input
  */
-final class PersistentInput extends Input {
+final class DefaultInput extends Input {
 	public function render(): string {
 		return (new Markup\NormalizedElement(
 			new Markup\ValidTag('input', $this->attribute()),
