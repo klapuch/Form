@@ -104,7 +104,7 @@ final class DefaultInput extends Tester\TestCase {
 		);
 	}
 
-	public function testRemovingAfterPresenting() {
+	public function testRemovingValueAfterPresenting() {
 		$storage = ['surname' => 'myself'];
 		Assert::same(
 			'<input foo="bar" name="surname" value="myself"/>',
