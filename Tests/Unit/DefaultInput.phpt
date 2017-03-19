@@ -14,31 +14,19 @@ use Tester\Assert;
 require __DIR__ . '/../bootstrap.php';
 
 final class DefaultInput extends Tester\TestCase {
-	public function testRenderingKnownAttributes() {
+	public function testPassingStatedValue() {
 		$storage = [];
 		Assert::same(
-			'<input type="text" name="surname"/>',
+			'<input name="surname" value="myself"/>',
 			(new Form\DefaultInput(
-				['type' => 'text', 'name' => 'surname'],
+				['name' => 'surname', 'value' => 'myself'],
 				new Form\Backup($storage, []),
 				new Validation\FakeRule()
 			))->render()
 		);
 	}
 
-	public function testRenderingUnknownAttributes() {
-		$storage = [];
-		Assert::same(
-			'<input foo="bar" name="surname"/>',
-			(new Form\DefaultInput(
-				['foo' => 'bar', 'name' => 'surname'],
-				new Form\Backup($storage, []),
-				new Validation\FakeRule()
-			))->render()
-		);
-	}
-
-	public function testPassingValueFromBackup() {
+	public function testOverwritingValueByBackup() {
 		$storage = ['surname' => 'myself'];
 		Assert::same(
 			'<input foo="bar" name="surname" value="myself"/>',
@@ -50,61 +38,7 @@ final class DefaultInput extends Tester\TestCase {
 		);
 	}
 
-	public function testValidating() {
-		$backup = ['surname' => 'myself'];
-		Assert::exception(function() use($backup) {
-			(new Form\DefaultInput(
-				['type' => 'text', 'name' => 'surname'],
-				new Form\Backup($backup, ['surname' => 'FOO']),
-				new Validation\FakeRule(null, new \DomainException('foo'))
-			))->validate();
-		}, \DomainException::class, 'foo');
-		Assert::noError(function() use($backup) {
-			(new Form\DefaultInput(
-				['type' => 'text', 'name' => 'surname'],
-				new Form\Backup($backup, ['surname' => 'BAR']),
-				new Validation\FakeRule(null, null)
-			))->validate();
-			Assert::same('BAR', $backup['surname']);
-		});
-	}
-
-	public function testIgnoringValidationOnUnknownName() {
-		$backup = ['surname' => 'myself'];
-		Assert::noError(function() use($backup) {
-			(new Form\DefaultInput(
-				[],
-				new Form\Backup($backup, ['surname' => 'BAR']),
-				new Validation\FakeRule(null, new \DomainException('foo'))
-			))->validate();
-		});
-	}
-
-	public function testPassingStatedAttributeValue() {
-		$storage = [];
-		Assert::same(
-			'<input foo="bar" name="surname" value="myself"/>',
-			(new Form\DefaultInput(
-				['foo' => 'bar', 'name' => 'surname', 'value' => 'myself'],
-				new Form\Backup($storage, []),
-				new Validation\FakeRule()
-			))->render()
-		);
-	}
-
-	public function testOverwritingValueWithBackup() {
-		$storage = ['surname' => 'myself'];
-		Assert::same(
-			'<input foo="bar" name="surname" value="myself"/>',
-			(new Form\DefaultInput(
-				['foo' => 'bar', 'name' => 'surname', 'value' => 'you'],
-				new Form\Backup($storage, []),
-				new Validation\FakeRule()
-			))->render()
-		);
-	}
-
-	public function testRemovingValueAfterPresenting() {
+	public function testRemovingBackupValueAfterPresenting() {
 		$storage = ['surname' => 'myself'];
 		Assert::same(
 			'<input foo="bar" name="surname" value="myself"/>',
@@ -118,6 +52,93 @@ final class DefaultInput extends Tester\TestCase {
 			'<input foo="bar" name="surname" value="you"/>',
 			(new Form\DefaultInput(
 				['foo' => 'bar', 'name' => 'surname', 'value' => 'you'],
+				new Form\Backup($storage, []),
+				new Validation\FakeRule()
+			))->render()
+		);
+	}
+
+	public function testValidatingWithSentValueWithFault() {
+		$backup = [];
+		Assert::exception(function() use($backup) {
+			(new Form\DefaultInput(
+				['type' => 'text', 'name' => 'surname'],
+				new Form\Backup($backup, ['surname' => 'FOO']),
+				new Validation\FakeRule(null, new \DomainException('foo'))
+			))->validate();
+		}, \DomainException::class, 'foo');
+	}
+
+	public function testValidatingWithSentValueWithoutFault() {
+		$backup = [];
+		Assert::noError(function() use($backup) {
+			(new Form\DefaultInput(
+				['type' => 'text', 'name' => 'surname'],
+				new Form\Backup($backup, ['surname' => 'FOO']),
+				new Validation\FakeRule(null, null)
+			))->validate();
+		});
+	}
+
+	public function testIgnoringValidationOnNoPostedData() {
+		$backup = [];
+		Assert::noError(function() use($backup) {
+			(new Form\DefaultInput(
+				['name' => 'surname'],
+				new Form\Backup($backup, []),
+				new Validation\FakeRule(null, new \DomainException('foo'))
+			))->validate();
+		});
+	}
+
+	public function testReloadingStatedValueAfterWrongValidation() {
+		$storage = [];
+		Assert::same(
+			'<input name="surname" value="you"/>',
+			(new Form\DefaultInput(
+				['name' => 'surname', 'value' => 'you'],
+				new Form\Backup($storage, []),
+				new Validation\FakeRule()
+			))->render()
+		);
+		Assert::exception(
+			function() use(&$storage) {
+				(new Form\DefaultInput(
+					['name' => 'surname', 'value' => 'bar'],
+					new Form\Backup($storage, ['surname' => 'bar']),
+					new Validation\FakeRule(null, new \DomainException('foo'))
+				))->validate();
+			}, \DomainException::class
+		);
+		Assert::same(
+			'<input name="surname" value="bar"/>',
+			(new Form\DefaultInput(
+				['name' => 'surname', 'value' => 'you'],
+				new Form\Backup($storage, []),
+				new Validation\FakeRule()
+			))->render()
+		);
+	}
+
+	public function testReloadAfterSuccessValidation() {
+		$storage = [];
+		Assert::same(
+			'<input name="surname" value="you"/>',
+			(new Form\DefaultInput(
+				['name' => 'surname', 'value' => 'you'],
+				new Form\Backup($storage, []),
+				new Validation\FakeRule()
+			))->render()
+		);
+		(new Form\DefaultInput(
+			['name' => 'surname', 'value' => 'bar'],
+			new Form\Backup($storage, ['surname' => 'bar']),
+			new Validation\FakeRule(null, null)
+		))->validate();
+		Assert::same(
+			'<input name="surname" value="bar"/>',
+			(new Form\DefaultInput(
+				['name' => 'surname', 'value' => 'you'],
 				new Form\Backup($storage, []),
 				new Validation\FakeRule()
 			))->render()

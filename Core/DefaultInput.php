@@ -26,9 +26,9 @@ final class DefaultInput implements Control {
 
 	public function validate(): void {
 		$name = $this->attributes['name'] ?? null;
-		if(isset($this->backup[$name]))
-			$this->rule->apply($this->backup[$name]);
 		$this->backup->archive($name);
+		if (isset($this->backup[$name]))
+			$this->rule->apply($this->backup[$name]);
 	}
 
 	public function render(): string {
@@ -40,7 +40,7 @@ final class DefaultInput implements Control {
 
 	private function attribute(): Markup\Attribute {
 		$name = $this->attributes['name'] ?? null;
-		if(isset($this->backup[$name]))
+		if (isset($this->backup[$name]))
 			$this->attributes['value'] = $this->backup[$name];
 		unset($this->backup[$name]);
 		return new Markup\ArrayAttribute($this->attributes);
