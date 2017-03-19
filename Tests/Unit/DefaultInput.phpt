@@ -38,7 +38,7 @@ final class DefaultInput extends Tester\TestCase {
 		);
 	}
 
-	public function testPassingValue() {
+	public function testPassingValueFromBackup() {
 		$storage = ['surname' => 'myself'];
 		Assert::same(
 			'<input foo="bar" name="surname" value="myself"/>',
@@ -69,18 +69,18 @@ final class DefaultInput extends Tester\TestCase {
 		});
 	}
 
-	public function testValidatingWithEmptyAttributes() {
+	public function testIgnoringValidationOnUnknownName() {
 		$backup = ['surname' => 'myself'];
 		Assert::noError(function() use($backup) {
 			(new Form\DefaultInput(
 				[],
 				new Form\Backup($backup, ['surname' => 'BAR']),
-				new Validation\FakeRule(null, null)
+				new Validation\FakeRule(null, new \DomainException('foo'))
 			))->validate();
 		});
 	}
 
-	public function testPassingStatedValue() {
+	public function testPassingStatedAttributeValue() {
 		$storage = [];
 		Assert::same(
 			'<input foo="bar" name="surname" value="myself"/>',
@@ -92,7 +92,7 @@ final class DefaultInput extends Tester\TestCase {
 		);
 	}
 
-	public function testOverwritingValue() {
+	public function testOverwritingValueWithBackup() {
 		$storage = ['surname' => 'myself'];
 		Assert::same(
 			'<input foo="bar" name="surname" value="myself"/>',
