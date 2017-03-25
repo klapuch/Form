@@ -11,24 +11,24 @@ use Klapuch\{
  */
 final class DefaultInput implements Control {
 	private $attributes;
-	private $backup;
+	private $storage;
 	private $rule;
 
 	public function __construct(
 		array $attributes,
-		Backup $backup,
+		Storage $storage,
 		Validation\Rule $rule
 	) {
 		$this->attributes = $attributes;
-		$this->backup = $backup;
+		$this->storage = $storage;
 		$this->rule = $rule;
 	}
 
 	public function validate(): void {
 		$name = $this->attributes['name'] ?? null;
-		$this->backup->archive($name);
-		if (isset($this->backup[$name]))
-			$this->rule->apply($this->backup[$name]);
+		$this->storage->archive($name);
+		if (isset($this->storage[$name]))
+			$this->rule->apply($this->storage[$name]);
 	}
 
 	public function render(): string {
@@ -40,9 +40,9 @@ final class DefaultInput implements Control {
 
 	private function attribute(): Markup\Attribute {
 		$name = $this->attributes['name'] ?? null;
-		if (isset($this->backup[$name]))
-			$this->attributes['value'] = $this->backup[$name];
-		unset($this->backup[$name]);
+		if (isset($this->storage[$name]))
+			$this->attributes['value'] = $this->storage[$name];
+		unset($this->storage[$name]);
 		return new Markup\ArrayAttribute($this->attributes);
 	}
 }
