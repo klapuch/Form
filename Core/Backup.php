@@ -5,7 +5,7 @@ namespace Klapuch\Form;
 /**
  * Storage for manipulation with data in input fields and their backups
  */
-final class Backup implements \ArrayAccess {
+final class Backup implements Storage {
 	private const IGNORED_BACKUPS = ['password'];
 	private const SECTION = '_form';
 	private $storage;
