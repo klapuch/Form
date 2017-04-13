@@ -38,6 +38,17 @@ final class DefaultInput extends Tester\TestCase {
 		);
 	}
 
+	public function testAllowingRenderingWithoutNameField() {
+		$storage = [];
+		Assert::noError(function() use ($storage) {
+			(new Form\DefaultInput(
+				['value' => 'myself'],
+				new Form\Backup($storage, []),
+				new Validation\FakeRule()
+			))->render();
+		});
+	}
+
 	public function testRemovingBackupValueAfterPresenting() {
 		$storage = ['surname' => 'myself'];
 		Assert::same(

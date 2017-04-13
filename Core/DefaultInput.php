@@ -43,7 +43,7 @@ final class DefaultInput implements Control {
 	}
 
 	private function attribute(): Markup\Attribute {
-		$name = $this->attributes['name'];
+		$name = $this->attributes['name'] ?? null;
 		if (isset($this->storage[$name]))
 			$this->attributes['value'] = $this->storage[$name];
 		unset($this->storage[$name]);
