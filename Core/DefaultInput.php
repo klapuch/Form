@@ -25,7 +25,7 @@ final class DefaultInput implements Control {
 	}
 
 	public function validate(): void {
-		$name = $this->attributes['name'] ?? null;
+		$name = $this->attributes['name'];
 		$this->storage->archive($name);
 		if (isset($this->storage[$name]))
 			$this->rule->apply($this->storage[$name]);
@@ -39,7 +39,7 @@ final class DefaultInput implements Control {
 	}
 
 	private function attribute(): Markup\Attribute {
-		$name = $this->attributes['name'] ?? null;
+		$name = $this->attributes['name'];
 		if (isset($this->storage[$name]))
 			$this->attributes['value'] = $this->storage[$name];
 		unset($this->storage[$name]);
