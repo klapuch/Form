@@ -27,8 +27,12 @@ final class DefaultInput implements Control {
 	public function validate(): void {
 		$name = $this->attributes['name'];
 		$this->storage->archive($name);
-		if (isset($this->storage[$name]))
-			$this->rule->apply($this->storage[$name]);
+		if (!isset($this->storage[$name])) {
+			throw new \UnexpectedValueException(
+				sprintf('Field "%s" is missing in sent data', $name)
+			);
+		}
+		$this->rule->apply($this->storage[$name]);
 	}
 
 	public function render(): string {

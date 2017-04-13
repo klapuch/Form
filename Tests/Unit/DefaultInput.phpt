@@ -80,15 +80,28 @@ final class DefaultInput extends Tester\TestCase {
 		});
 	}
 
-	public function testIgnoringValidationOnNoPostedData() {
+	/**
+	 * @throws \UnexpectedValueException Field "surname" is missing in sent data
+	 */
+	public function testThrowingOnNoPostedDataDuringValidation() {
 		$backup = [];
-		Assert::noError(function() use($backup) {
-			(new Form\DefaultInput(
-				['name' => 'surname'],
-				new Form\Backup($backup, []),
-				new Validation\FakeRule(null, new \DomainException('foo'))
-			))->validate();
-		});
+		(new Form\DefaultInput(
+			['name' => 'surname'],
+			new Form\Backup($backup, []),
+			new Validation\FakeRule(null, new \DomainException('foo'))
+		))->validate();
+	}
+
+	/**
+	 * @throws \UnexpectedValueException Field "surname" is missing in sent data
+	 */
+	public function testThrowingOnMissingFieldDuringValidation() {
+		$backup = [];
+		(new Form\DefaultInput(
+			['name' => 'surname'],
+			new Form\Backup($backup, ['foo' => 'bar']),
+			new Validation\FakeRule(null, new \DomainException('foo'))
+		))->validate();
 	}
 
 	public function testReloadingStatedValueAfterWrongValidation() {
