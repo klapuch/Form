@@ -35,19 +35,21 @@ final class Backup extends Tester\TestCase {
 		Assert::same('foo', $storage['bar']);
 	}
 
-	public function testSourceWithPrecedence() {
+	public function testGettingWithSourcePrecedence() {
 		$backup = ['foo' => 'backup'];
 		$source = ['foo' => 'source'];
 		$storage = new Form\Backup($backup, $source);
 		Assert::same('source', $storage['foo']);
 	}
 
-	public function testUnseting() {
+	public function testUnsetingFromStorage() {
 		$backup = ['foo' => 'bar'];
-		$storage = new Form\Backup($backup, []);
+		$storage = new Form\Backup($backup, ['bar' => 'baz']);
 		Assert::same('bar', $storage['foo']);
 		unset($storage['foo']);
+		unset($storage['bar']);
 		Assert::null($storage['foo']);
+		Assert::same('baz', $storage['bar']);
 	}
 
 	public function testCheckingExistence() {
