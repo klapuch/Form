@@ -26,7 +26,7 @@ final class HarnessedForm implements Control {
 
 	public function validate(): void {
 		$this->origin->validate();
-		$this->storage->drop();
 		($this->onSuccess)();
+		$this->storage->drop();
 	}
 }

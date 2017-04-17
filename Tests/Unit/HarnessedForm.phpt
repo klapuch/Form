@@ -12,7 +12,7 @@ use Tester\Assert;
 require __DIR__ . '/../bootstrap.php';
 
 final class HarnessedForm extends Tester\TestCase {
-	public function testValidateDropCallbackFlow() {
+	public function testFlow() {
 		ob_start();
 		(new Form\HarnessedForm(
 			new class implements Form\Control {
@@ -35,7 +35,7 @@ final class HarnessedForm extends Tester\TestCase {
 				echo 'c';
 			}
 		))->validate();
-		Assert::same('abc', ob_get_clean());
+		Assert::same('acb', ob_get_clean());
 	}
 }
 
