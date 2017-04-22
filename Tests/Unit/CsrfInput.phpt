@@ -17,16 +17,16 @@ final class CsrfInput extends Tester\TestCase {
 	public function testHiddenField() {
 		Assert::contains(
 			'type="hidden"',
-			(new Form\CsrfInput(new Csrf\FakeCsrf('')))->render()
+			(new Form\CsrfInput(new Csrf\FakeProtection('')))->render()
 		);
 	}
 
 	public function testValidating() {
 		Assert::noError(function() {
-			(new Form\CsrfInput(new Csrf\FakeCsrf('', false)))->validate();
+			(new Form\CsrfInput(new Csrf\FakeProtection('', false)))->validate();
 		});
 		Assert::exception(function() {
-			(new Form\CsrfInput(new Csrf\FakeCsrf('', true)))->validate();
+			(new Form\CsrfInput(new Csrf\FakeProtection('', true)))->validate();
 		}, \UnexpectedValueException::class, 'Timeout');
 	}
 }

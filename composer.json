@@ -14,7 +14,7 @@
 	"require": {
 		"php": ">=7.1",
 		"klapuch/markup": "^2.0.0",
-		"klapuch/csrf": "^1.0.0",
+		"klapuch/csrf": "^2.0.0",
 		"klapuch/validation": "^2.0.0"
 	},
 	"require-dev": {

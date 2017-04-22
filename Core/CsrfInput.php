@@ -10,16 +10,16 @@ use Klapuch\Csrf;
 final class CsrfInput implements Control {
 	private $csrf;
 
-	public function __construct(Csrf\Csrf $csrf) {
+	public function __construct(Csrf\Protection $csrf) {
 		$this->csrf = $csrf;
 	}
 
 	public function render(): string {
-		return (new Csrf\CsrfInput($this->csrf))->protection();
+		return (new Csrf\Input($this->csrf))->coverage();
 	}
 
 	public function validate(): void {
-		if($this->csrf->abused())
+		if($this->csrf->attacked())
 			throw new \UnexpectedValueException('Timeout');
 	}
 }
