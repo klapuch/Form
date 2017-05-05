@@ -1,13 +1,13 @@
 <?php
+declare(strict_types = 1);
 /**
  * @testCase
  * @phpVersion > 7.1
  */
 namespace Klapuch\Form\Unit;
 
-use Klapuch\{
-	Form, Markup
-};
+use Klapuch\Form;
+use Klapuch\Markup;
 use Tester;
 use Tester\Assert;
 

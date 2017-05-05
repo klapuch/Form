@@ -24,7 +24,7 @@ final class RawForm implements Control {
 	}
 
 	public function validate(): void {
-		foreach($this->controls as $control)
+		foreach ($this->controls as $control)
 			$control->validate();
 	}
 

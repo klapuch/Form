@@ -19,7 +19,7 @@ final class CsrfInput implements Control {
 	}
 
 	public function validate(): void {
-		if($this->csrf->attacked())
+		if ($this->csrf->attacked())
 			throw new \UnexpectedValueException('Timeout');
 	}
 }

@@ -2,9 +2,8 @@
 declare(strict_types = 1);
 namespace Klapuch\Form;
 
-use Klapuch\{
-	Markup, Validation
-};
+use Klapuch\Markup;
+use Klapuch\Validation;
 
 /**
  * Default input

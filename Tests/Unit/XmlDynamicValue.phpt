@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 /**
  * @testCase
  * @phpVersion > 7.1
@@ -15,19 +16,19 @@ final class XmlDynamicValue extends Tester\TestCase {
 	public function testReloadingFromInsideRoot() {
 		$dom = new \DOMDocument();
 		$dom->loadXML('<root><last_update>now</last_update></root>');
-		Assert::same('now', (string)new Form\XmlDynamicValue('last_update', $dom));
+		Assert::same('now', (string) new Form\XmlDynamicValue('last_update', $dom));
 	}
 
 	public function testCaseSensitiveReloading() {
 		$dom = new \DOMDocument();
 		$dom->loadXML('<root><last_update>now</last_update></root>');
-		Assert::same('', (string)new Form\XmlDynamicValue('LAST_update', $dom));
+		Assert::same('', (string) new Form\XmlDynamicValue('LAST_update', $dom));
 	}
 
 	public function testNoValueOnNoRelatedXmlElement() {
 		$dom = new \DOMDocument();
 		$dom->loadXML('<root><last_update>now</last_update></root>');
-		Assert::same('', (string)new Form\XmlDynamicValue('foo', $dom));
+		Assert::same('', (string) new Form\XmlDynamicValue('foo', $dom));
 	}
 }
 

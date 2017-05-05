@@ -1,13 +1,13 @@
 <?php
+declare(strict_types = 1);
 /**
  * @testCase
  * @phpVersion > 7.1
  */
 namespace Klapuch\Form\Unit;
 
-use Klapuch\{
-	Form, Validation
-};
+use Klapuch\Form;
+use Klapuch\Validation;
 use Tester;
 use Tester\Assert;
 
@@ -71,7 +71,7 @@ final class DefaultInput extends Tester\TestCase {
 
 	public function testValidatingWithSentValueWithFault() {
 		$backup = [];
-		Assert::exception(function() use($backup) {
+		Assert::exception(function() use ($backup) {
 			(new Form\DefaultInput(
 				['type' => 'text', 'name' => 'surname'],
 				new Form\Backup($backup, ['surname' => 'FOO']),
@@ -82,7 +82,7 @@ final class DefaultInput extends Tester\TestCase {
 
 	public function testValidatingWithSentValueWithoutFault() {
 		$backup = [];
-		Assert::noError(function() use($backup) {
+		Assert::noError(function() use ($backup) {
 			(new Form\DefaultInput(
 				['type' => 'text', 'name' => 'surname'],
 				new Form\Backup($backup, ['surname' => 'FOO']),
@@ -126,13 +126,14 @@ final class DefaultInput extends Tester\TestCase {
 			))->render()
 		);
 		Assert::exception(
-			function() use(&$storage) {
+			function() use (&$storage) {
 				(new Form\DefaultInput(
 					['name' => 'surname', 'value' => 'bar'],
 					new Form\Backup($storage, ['surname' => 'bar']),
 					new Validation\FakeRule(null, new \DomainException('foo'))
 				))->validate();
-			}, \DomainException::class
+			},
+			\DomainException::class
 		);
 		Assert::same(
 			'<input name="surname" value="bar"/>',

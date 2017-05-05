@@ -16,19 +16,23 @@ final class Backup implements Storage {
 		$this->source[self::SECTION] = $source;
 	}
 
-	public function offsetSet($name, $value) {
-		if($name && !in_array($name, self::IGNORED_BACKUPS, true))
+	public function offsetSet($name, $value): void {
+		if ($name && !in_array($name, self::IGNORED_BACKUPS, true))
 			$this->storage[self::SECTION][$name] = $value;
 	}
 
-	public function offsetExists($name) {
+	public function offsetExists($name): bool {
 		return isset($this->merge()[$name]);
 	}
 
-	public function offsetUnset($name) {
+	public function offsetUnset($name): void {
 		unset($this->storage[self::SECTION][$name]);
 	}
 
+	/**
+	 * @param mixed $name
+	 * @return mixed
+	 */
 	public function offsetGet($name) {
 		return $this->merge()[$name] ?? null;
 	}
@@ -47,7 +51,7 @@ final class Backup implements Storage {
 	 * @return void
 	 */
 	public function drop(): void {
-		foreach(array_keys($this->source[self::SECTION]) as $name)
+		foreach (array_keys($this->source[self::SECTION]) as $name)
 			unset($this[$name]);
 	}
 

@@ -24,7 +24,8 @@ final class BootstrapInput implements Control {
 					'div',
 					new Markup\ConcatenatedAttribute(
 						new Markup\SafeAttribute(
-							'class', sprintf('col-sm-%d', $this->columns)
+							'class',
+							sprintf('col-sm-%d', $this->columns)
 						)
 					)
 				)

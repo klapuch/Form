@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 /**
  * @testCase
  * @phpVersion > 7.1
@@ -16,17 +17,23 @@ final class HarnessedForm extends Tester\TestCase {
 		ob_start();
 		(new Form\HarnessedForm(
 			new class implements Form\Control {
-				public function render(): string {}
+				public function render(): string {
+				}
 				public function validate(): void {
 					echo 'a';
 				}
 			},
 			new class implements Form\Storage {
-				public function offsetExists($offset) {}
-				public function offsetGet($offset) {}
-				public function offsetSet($offset, $value) {}
-				public function offsetUnset($offset) {}
-				public function archive($name): void {}
+				public function offsetExists($offset) {
+				}
+				public function offsetGet($offset) {
+				}
+				public function offsetSet($offset, $value) {
+				}
+				public function offsetUnset($offset) {
+				}
+				public function archive($name): void {
+				}
 				public function drop(): void {
 					echo 'b';
 				}

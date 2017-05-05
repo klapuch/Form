@@ -19,7 +19,7 @@ final class FakeControl implements Control {
 	}
 
 	public function validate(): void {
-		if($this->exception !== null)
+		if ($this->exception !== null)
 			throw $this->exception;
 	}
 }
