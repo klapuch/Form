@@ -115,6 +115,17 @@ final class DefaultInput extends Tester\TestCase {
 		))->validate();
 	}
 
+	public function testPassingWithDisabledInput() {
+		Assert::noError(function() {
+			$backup = [];
+			(new Form\DefaultInput(
+				['name' => 'surname', 'disabled' => 'true'],
+				new Form\Backup($backup, ['foo' => 'bar']),
+				new Validation\FakeRule(null, null)
+			))->validate();
+		});
+	}
+
 	public function testReloadingStatedValueAfterWrongValidation() {
 		$storage = [];
 		Assert::same(
