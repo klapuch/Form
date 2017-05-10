@@ -126,6 +126,17 @@ final class DefaultInput extends Tester\TestCase {
 		});
 	}
 
+	public function testIgnoringRulesForDisableInput() {
+		Assert::noError(function() {
+			$backup = [];
+			(new Form\DefaultInput(
+				['name' => 'surname', 'disabled' => 'true'],
+				new Form\Backup($backup, ['foo' => 'bar']),
+				new Validation\FakeRule(null, new \DomainException('foo'))
+			))->validate();
+		});
+	}
+
 	public function testReloadingStatedValueAfterWrongValidation() {
 		$storage = [];
 		Assert::same(

@@ -26,7 +26,9 @@ final class DefaultInput implements Control {
 	public function validate(): void {
 		$name = $this->attributes['name'];
 		$this->storage->archive($name);
-		if (!isset($this->storage[$name]) && !isset($this->attributes['disabled'])) {
+		if (isset($this->attributes['disabled']))
+			return;
+		if (!isset($this->storage[$name])) {
 			throw new \UnexpectedValueException(
 				sprintf('Field "%s" is missing in sent data', $name)
 			);
