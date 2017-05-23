@@ -6,7 +6,7 @@ final class FakeLabel implements Label {
 	private $output;
 
 	public function __construct(string $output = null) {
-	    $this->output = $output;
+		$this->output = $output;
 	}
 
 	public function render(): string {
