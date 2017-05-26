@@ -10,44 +10,24 @@ use Klapuch\Validation;
  */
 final class DefaultInput implements Control {
 	private $attributes;
-	private $storage;
 	private $rule;
 
-	public function __construct(
-		array $attributes,
-		Storage $storage,
-		Validation\Rule $rule
-	) {
+	public function __construct(Attributes $attributes, Validation\Rule $rule) {
 		$this->attributes = $attributes;
-		$this->storage = $storage;
 		$this->rule = $rule;
 	}
 
 	public function validate(): void {
-		$name = $this->attributes['name'];
-		$this->storage->archive($name);
-		if (isset($this->attributes['disabled']))
-			return;
-		if (!isset($this->storage[$name])) {
-			throw new \UnexpectedValueException(
-				sprintf('Field "%s" is missing in sent data', $name)
-			);
-		}
-		$this->rule->apply($this->storage[$name]);
+		$this->rule->apply($this->attributes['value']);
 	}
 
 	public function render(): string {
 		return (new Markup\NormalizedElement(
-			new Markup\ValidTag('input', $this->attribute()),
+			new Markup\ValidTag(
+				'input',
+				new Markup\ArrayAttribute($this->attributes->pairs())
+			),
 			new Markup\EmptyElement()
 		))->markup();
-	}
-
-	private function attribute(): Markup\Attribute {
-		$name = $this->attributes['name'] ?? null;
-		if (isset($this->storage[$name]))
-			$this->attributes['value'] = $this->storage[$name];
-		unset($this->storage[$name]);
-		return new Markup\ArrayAttribute($this->attributes);
 	}
 }

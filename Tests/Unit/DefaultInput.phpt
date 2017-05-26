@@ -14,180 +14,22 @@ use Tester\Assert;
 require __DIR__ . '/../bootstrap.php';
 
 final class DefaultInput extends Tester\TestCase {
-	public function testPassingStatedValue() {
-		$storage = [];
-		Assert::same(
-			'<input name="surname" value="myself"/>',
-			(new Form\DefaultInput(
-				['name' => 'surname', 'value' => 'myself'],
-				new Form\Backup($storage, []),
-				new Validation\FakeRule()
-			))->render()
-		);
-	}
-
-	public function testOverwritingValueByBackup() {
-		$storage = ['surname' => 'myself'];
-		Assert::same(
-			'<input foo="bar" name="surname" value="myself"/>',
-			(new Form\DefaultInput(
-				['foo' => 'bar', 'name' => 'surname'],
-				new Form\Backup($storage, []),
-				new Validation\FakeRule()
-			))->render()
-		);
-	}
-
-	public function testAllowingRenderingWithoutNameField() {
-		$storage = [];
-		Assert::noError(function() use ($storage) {
-			(new Form\DefaultInput(
-				['value' => 'myself'],
-				new Form\Backup($storage, []),
-				new Validation\FakeRule()
-			))->render();
-		});
-	}
-
-	public function testRemovingBackupValueAfterPresenting() {
-		$storage = ['surname' => 'myself'];
-		Assert::same(
-			'<input foo="bar" name="surname" value="myself"/>',
-			(new Form\DefaultInput(
-				['foo' => 'bar', 'name' => 'surname', 'value' => 'you'],
-				new Form\Backup($storage, []),
-				new Validation\FakeRule()
-			))->render()
-		);
-		Assert::same(
-			'<input foo="bar" name="surname" value="you"/>',
-			(new Form\DefaultInput(
-				['foo' => 'bar', 'name' => 'surname', 'value' => 'you'],
-				new Form\Backup($storage, []),
-				new Validation\FakeRule()
-			))->render()
-		);
-	}
-
-	public function testValidatingWithSentValueWithFault() {
-		$backup = [];
-		Assert::exception(function() use ($backup) {
-			(new Form\DefaultInput(
-				['type' => 'text', 'name' => 'surname'],
-				new Form\Backup($backup, ['surname' => 'FOO']),
-				new Validation\FakeRule(null, new \DomainException('foo'))
-			))->validate();
-		}, \DomainException::class, 'foo');
-	}
-
-	public function testValidatingWithSentValueWithoutFault() {
-		$backup = [];
-		Assert::noError(function() use ($backup) {
-			(new Form\DefaultInput(
-				['type' => 'text', 'name' => 'surname'],
-				new Form\Backup($backup, ['surname' => 'FOO']),
-				new Validation\FakeRule(null, null)
-			))->validate();
-		});
-	}
-
 	/**
-	 * @throws \UnexpectedValueException Field "surname" is missing in sent data
+	 * @throws \DomainException Foo
 	 */
-	public function testThrowingOnNoPostedDataDuringValidation() {
-		$backup = [];
+	public function testUsingValueForRule() {
 		(new Form\DefaultInput(
-			['name' => 'surname'],
-			new Form\Backup($backup, []),
-			new Validation\FakeRule(null, new \DomainException('foo'))
+			new Form\FakeAttributes(['value' => 'my-value']),
+			new Validation\FakeRule(null, new \DomainException('Foo'))
 		))->validate();
 	}
 
-	/**
-	 * @throws \UnexpectedValueException Field "surname" is missing in sent data
-	 */
-	public function testThrowingOnMissingFieldDuringValidation() {
-		$backup = [];
-		(new Form\DefaultInput(
-			['name' => 'surname'],
-			new Form\Backup($backup, ['foo' => 'bar']),
-			new Validation\FakeRule(null, new \DomainException('foo'))
-		))->validate();
-	}
-
-	public function testPassingWithDisabledInput() {
-		Assert::noError(function() {
-			$backup = [];
-			(new Form\DefaultInput(
-				['name' => 'surname', 'disabled' => 'true'],
-				new Form\Backup($backup, ['foo' => 'bar']),
-				new Validation\FakeRule(null, null)
-			))->validate();
-		});
-	}
-
-	public function testIgnoringRulesForDisableInput() {
-		Assert::noError(function() {
-			$backup = [];
-			(new Form\DefaultInput(
-				['name' => 'surname', 'disabled' => 'true'],
-				new Form\Backup($backup, ['foo' => 'bar']),
-				new Validation\FakeRule(null, new \DomainException('foo'))
-			))->validate();
-		});
-	}
-
-	public function testReloadingStatedValueAfterWrongValidation() {
-		$storage = [];
+	public function testRenderingAsInput() {
 		Assert::same(
-			'<input name="surname" value="you"/>',
+			'<input type="number" name="age"/>',
 			(new Form\DefaultInput(
-				['name' => 'surname', 'value' => 'you'],
-				new Form\Backup($storage, []),
-				new Validation\FakeRule()
-			))->render()
-		);
-		Assert::exception(
-			function() use (&$storage) {
-				(new Form\DefaultInput(
-					['name' => 'surname', 'value' => 'bar'],
-					new Form\Backup($storage, ['surname' => 'bar']),
-					new Validation\FakeRule(null, new \DomainException('foo'))
-				))->validate();
-			},
-			\DomainException::class
-		);
-		Assert::same(
-			'<input name="surname" value="bar"/>',
-			(new Form\DefaultInput(
-				['name' => 'surname', 'value' => 'you'],
-				new Form\Backup($storage, []),
-				new Validation\FakeRule()
-			))->render()
-		);
-	}
-
-	public function testReloadAfterSuccessValidation() {
-		$storage = [];
-		Assert::same(
-			'<input name="surname" value="you"/>',
-			(new Form\DefaultInput(
-				['name' => 'surname', 'value' => 'you'],
-				new Form\Backup($storage, []),
-				new Validation\FakeRule()
-			))->render()
-		);
-		(new Form\DefaultInput(
-			['name' => 'surname', 'value' => 'bar'],
-			new Form\Backup($storage, ['surname' => 'bar']),
-			new Validation\FakeRule(null, null)
-		))->validate();
-		Assert::same(
-			'<input name="surname" value="bar"/>',
-			(new Form\DefaultInput(
-				['name' => 'surname', 'value' => 'you'],
-				new Form\Backup($storage, []),
-				new Validation\FakeRule()
+				new Form\FakeAttributes(['type' => 'number', 'name' => 'age']),
+				new Validation\FakeRule(null, new \DomainException('Foo'))
 			))->render()
 		);
 	}
