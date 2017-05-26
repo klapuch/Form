@@ -24,6 +24,15 @@ final class DefaultInput extends Tester\TestCase {
 		))->validate();
 	}
 
+	public function testIgnoringValidationForDisabledAttribute() {
+		Assert::noError(function() {
+			(new Form\DefaultInput(
+				new Form\FakeAttributes(['value' => 'my-value', 'disabled' => '']),
+				new Validation\FakeRule(null, new \DomainException('Foo'))
+			))->validate();
+		});
+	}
+
 	public function testRenderingAsInput() {
 		Assert::same(
 			'<input type="number" name="age"/>',

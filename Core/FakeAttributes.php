@@ -14,6 +14,7 @@ final class FakeAttributes implements Attributes {
 	}
 
 	public function offsetExists($offset): bool {
+		return isset($this->attributes[$offset]);
 	}
 
 	/**
