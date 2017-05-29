@@ -20,7 +20,7 @@ final class DefaultInput extends Tester\TestCase {
 	public function testUsingValueForRule() {
 		(new Form\DefaultInput(
 			new Form\FakeAttributes(['value' => 'my-value']),
-			new Validation\FakeRule(null, new \DomainException('Foo'))
+			new Validation\FakeRule(false, new \DomainException('Foo'))
 		))->validate();
 	}
 

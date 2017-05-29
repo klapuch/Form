@@ -18,8 +18,10 @@ final class DefaultInput implements Control {
 	}
 
 	public function validate(): void {
-		if (!isset($this->attributes['disabled']))
-			$this->rule->apply($this->attributes['value']);
+		(new ActiveRule(
+			$this->rule,
+			$this->attributes
+		))->apply($this->attributes['value']);
 	}
 
 	public function render(): string {
