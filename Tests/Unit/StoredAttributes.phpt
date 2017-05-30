@@ -137,6 +137,21 @@ final class StoredAttributes extends Tester\TestCase {
 		unset($attributes['type']);
 		Assert::same(['name' => 'age'], $attributes->pairs());
 	}
+
+	public function testCaseSensitiveAttributes() {
+		$storage = [];
+		$attributes = new Form\StoredAttributes(
+			['type' => 'number', 'TYPE' => 'text'],
+			new Form\Backup($storage, [])
+		);
+		Assert::same('number', $attributes['type']);
+		Assert::same('text', $attributes['TYPE']);
+		Assert::true(isset($attributes['type']));
+		Assert::true(isset($attributes['TYPE']));
+		unset($attributes['TYPE']);
+		$attributes['TYPE'] = 'FOO';
+		Assert::count(2, $attributes->pairs());
+	}
 }
 
 (new StoredAttributes())->run();
