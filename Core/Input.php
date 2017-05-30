@@ -8,7 +8,7 @@ use Klapuch\Validation;
 /**
  * Default input
  */
-final class DefaultInput implements Control {
+final class Input implements Control {
 	private $attributes;
 	private $rule;
 
