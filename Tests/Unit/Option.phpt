@@ -35,17 +35,6 @@ final class Option extends Tester\TestCase {
 			))->render()
 		);
 	}
-
-	public function testPuttingSelectedAttribute() {
-		Assert::same(
-			'<option value="foo" selected="selected">Hi!</option>',
-			(new Form\Option(
-				new Form\FakeAttributes(['value' => 'foo']),
-				'Hi!',
-				new Validation\FakeRule(true)
-			))->render()
-		);
-	}
 }
 
 (new Option())->run();

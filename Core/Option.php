@@ -28,8 +28,6 @@ final class Option implements Control {
 	}
 
 	public function render(): string {
-		if ($this->rule->satisfied($this->attributes['value']))
-			$this->attributes['selected'] = 'selected';
 		return (new Markup\NormalizedElement(
 			new Markup\ValidTag(
 				'option',
