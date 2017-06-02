@@ -84,7 +84,7 @@ final class DependentAttributes extends Tester\TestCase {
 		$attributes = new Form\DependentAttributes(
 			['name' => 'age', 'type' => 'number'],
 			new Form\Backup($storage, ['age' => '20']),
-			''
+			'age'
 		);
 		Assert::same('20', $attributes['value']);
 	}
@@ -94,7 +94,7 @@ final class DependentAttributes extends Tester\TestCase {
 		$attributes = new Form\DependentAttributes(
 			['name' => 'age', 'type' => 'number'],
 			new Form\Backup($storage, ['foo' => '20']),
-			''
+			'age'
 		);
 		Assert::exception(function() use ($attributes) {
 			$foo = $attributes['value'];
@@ -106,7 +106,7 @@ final class DependentAttributes extends Tester\TestCase {
 		$attributes = new Form\DependentAttributes(
 			['name' => 'age', 'type' => 'number', 'disabled' => 'true'],
 			new Form\Backup($storage, ['age' => '20']),
-			''
+			'age'
 		);
 		$foo = $attributes['value'];
 		Assert::same(['age' => '20'], $storage);

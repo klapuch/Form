@@ -30,13 +30,13 @@ final class DependentAttributes implements Attributes {
 	 */
 	public function offsetGet($offset) {
 		if ($offset === 'value') {
-			$this->storage->archive($this['name']);
-			if (!isset($this->storage[$this['name']])) {
+			$this->storage->archive($this->dependent);
+			if (!isset($this->storage[$this->dependent])) {
 				throw new \UnexpectedValueException(
-					sprintf('Field "%s" is missing in sent data', $this['name'])
+					sprintf('Field "%s" is missing in sent data', $this->dependent)
 				);
 			}
-			return $this->storage[$this['name']];
+			return $this->storage[$this->dependent];
 		}
 		return $this->attributes[$offset];
 	}
