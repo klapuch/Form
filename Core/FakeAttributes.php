@@ -25,6 +25,7 @@ final class FakeAttributes implements Attributes {
 	}
 
 	public function offsetSet($offset, $value): void {
+		$this->attributes[$offset] = $value;
 	}
 
 	public function offsetUnset($offset): void {
