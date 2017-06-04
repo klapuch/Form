@@ -101,6 +101,18 @@ final class DependentAttributes extends Tester\TestCase {
 		}, \UnexpectedValueException::class, 'Field "age" is missing in sent data');
 	}
 
+	public function testNoCheckForDisabledAttribute() {
+		$storage = [];
+		$attributes = new Form\DependentAttributes(
+			['name' => 'age', 'type' => 'number', 'disabled' => 'true'],
+			new Form\Backup($storage, ['foo' => '20']),
+			'age'
+		);
+		Assert::noError(function() use ($attributes) {
+			$foo = $attributes['value'];
+		});
+	}
+
 	public function testArchiving() {
 		$storage = [];
 		$attributes = new Form\DependentAttributes(
