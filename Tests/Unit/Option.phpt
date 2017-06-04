@@ -35,6 +35,16 @@ final class Option extends Tester\TestCase {
 			))->render()
 		);
 	}
+
+	public function testIgnoringValidationForDisabledAttribute() {
+		Assert::noError(function() {
+			(new Form\Option(
+				new Form\FakeAttributes(['value' => 'my-value', 'disabled' => 'true']),
+				'Hi!',
+				new Validation\FakeRule(null, new \DomainException('Foo'))
+			))->validate();
+		});
+	}
 }
 
 (new Option())->run();

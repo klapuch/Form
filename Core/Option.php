@@ -24,7 +24,10 @@ final class Option implements Control {
 	}
 
 	public function validate(): void {
-		$this->rule->apply($this->attributes['value']);
+		(new ActiveRule(
+			$this->rule,
+			$this->attributes
+		))->apply($this->attributes['value']);
 	}
 
 	public function render(): string {
