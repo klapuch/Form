@@ -21,7 +21,7 @@ final class FakeAttributes implements Attributes {
 	 * @return mixed
 	 */
 	public function offsetGet($offset) {
-		return $this->attributes[$offset];
+		return $this->attributes[$offset] ?? null;
 	}
 
 	public function offsetSet($offset, $value): void {
