@@ -25,34 +25,40 @@ final class StoredAttributes extends Tester\TestCase {
 	}
 
 	public function testValueFromStorage() {
-		$storage = ['age' => '20'];
+		$storage = [];
+		$backup = new Form\Backup($storage, []);
+		$backup['age'] = '20';
 		Assert::same(
 			['name' => 'age', 'type' => 'number', 'value' => '20'],
 			(new Form\StoredAttributes(
 				['name' => 'age', 'type' => 'number'],
-				new Form\Backup($storage, [])
+				$backup
 			))->pairs()
 		);
 	}
 
 	public function testRewritingValueFromStorage() {
-		$storage = ['age' => '20'];
+		$storage = [];
+		$backup = new Form\Backup($storage, []);
+		$backup['age'] = '20';
 		Assert::same(
 			['name' => 'age', 'type' => 'number', 'value' => '20'],
 			(new Form\StoredAttributes(
 				['name' => 'age', 'type' => 'number', 'value' => '44'],
-				new Form\Backup($storage, [])
+				$backup
 			))->pairs()
 		);
 	}
 
 	public function testRemovingAfterUse() {
-		$storage = ['age' => '20'];
+		$storage = [];
+		$backup = new Form\Backup($storage, []);
+		$backup['age'] = '20';
 		(new Form\StoredAttributes(
 			['name' => 'age', 'type' => 'number'],
-			new Form\Backup($storage, [])
+			$backup
 		))->pairs();
-		Assert::same([], $storage);
+		Assert::same([], current($storage));
 	}
 
 	public function testGetting() {
@@ -102,7 +108,7 @@ final class StoredAttributes extends Tester\TestCase {
 			new Form\Backup($storage, ['age' => '20'])
 		);
 		$foo = $attributes['value'];
-		Assert::same(['age' => '20'], $storage);
+		Assert::same(['age' => '20'], current($storage));
 	}
 
 	public function testCheckingExistence() {

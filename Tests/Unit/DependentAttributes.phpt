@@ -26,12 +26,14 @@ final class DependentAttributes extends Tester\TestCase {
 	}
 
 	public function testMatchingValueCreatingNewAttribute() {
-		$storage = ['age' => 'bar'];
+		$storage = [];
+		$backup = new Form\Backup($storage, []);
+		$backup['age'] = 'bar';
 		Assert::same(
 			['name' => 'foo', 'type' => 'number', 'value' => 'bar', 'selected' => 'selected'],
 			(new Form\DependentAttributes(
 				['name' => 'foo', 'type' => 'number', 'value' => 'bar'],
-				new Form\Backup($storage, []),
+				$backup,
 				'age'
 			))->pairs()
 		);
@@ -50,13 +52,15 @@ final class DependentAttributes extends Tester\TestCase {
 	}
 
 	public function testRemovingAfterSuccessfulMatchUse() {
-		$storage = ['age' => '20'];
+		$storage = [];
+		$backup = new Form\Backup($storage, []);
+		$backup['age'] = '20';
 		(new Form\DependentAttributes(
 			['name' => 'age', 'type' => 'number', 'value' => '20'],
-			new Form\Backup($storage, []),
+			$backup,
 			'age'
 		))->pairs();
-		Assert::same([], $storage);
+		Assert::same([], current($storage));
 	}
 
 	public function testSameStorageValueAfterNotMatchingValue() {
@@ -121,7 +125,7 @@ final class DependentAttributes extends Tester\TestCase {
 			'age'
 		);
 		$foo = $attributes['value'];
-		Assert::same(['age' => '20'], $storage);
+		Assert::same(['age' => '20'], current($storage));
 	}
 
 	public function testCheckingExistence() {

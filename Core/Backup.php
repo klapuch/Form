@@ -12,8 +12,8 @@ final class Backup implements Storage {
 	private $source;
 
 	public function __construct(array &$storage, array $source) {
-		$this->storage[self::SECTION] = &$storage;
-		$this->source[self::SECTION] = $source;
+		$this->storage = &$storage;
+		$this->source = $source;
 	}
 
 	public function offsetSet($name, $value): void {
@@ -51,7 +51,7 @@ final class Backup implements Storage {
 	 * @return void
 	 */
 	public function drop(): void {
-		foreach (array_keys($this->source[self::SECTION]) as $name)
+		foreach (array_keys($this->source) as $name)
 			unset($this[$name]);
 	}
 
@@ -60,6 +60,6 @@ final class Backup implements Storage {
 	 * @return array
 	 */
 	private function merge(): array {
-		return $this->source[self::SECTION] + $this->storage[self::SECTION];
+		return $this->source + ($this->storage[self::SECTION] ?? []);
 	}
 }

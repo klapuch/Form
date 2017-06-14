@@ -13,6 +13,15 @@ use Tester\Assert;
 require __DIR__ . '/../bootstrap.php';
 
 final class Backup extends Tester\TestCase {
+	public function testNoDirectSetting() {
+		$backup = ['id' => 'USER ID!'];
+		$storage = new Form\Backup($backup, []);
+		Assert::null($storage['id']);
+		$storage['id'] = 'foo';
+		Assert::same('foo', $storage['id']);
+		Assert::same('USER ID!', $backup['id']);
+	}
+
 	public function testIgnoringUnnamedIndex() {
 		$backup = [];
 		$storage = new Form\Backup($backup, []);
@@ -29,10 +38,10 @@ final class Backup extends Tester\TestCase {
 	}
 
 	public function testGetting() {
-		$backup = ['foo' => 'bar'];
+		$backup = [];
 		$storage = new Form\Backup($backup, []);
 		$storage['bar'] = 'foo';
-		Assert::same('bar', $storage['foo']);
+		Assert::null($storage['foo']);
 		Assert::same('foo', $storage['bar']);
 	}
 
@@ -44,9 +53,8 @@ final class Backup extends Tester\TestCase {
 	}
 
 	public function testUnsetingFromStorage() {
-		$backup = ['foo' => 'bar'];
+		$backup = [];
 		$storage = new Form\Backup($backup, ['bar' => 'baz']);
-		Assert::same('bar', $storage['foo']);
 		unset($storage['foo']);
 		unset($storage['bar']);
 		Assert::null($storage['foo']);
@@ -54,56 +62,64 @@ final class Backup extends Tester\TestCase {
 	}
 
 	public function testCheckingExistence() {
-		$backup = ['foo' => 'bar'];
+		$backup = [];
 		$storage = new Form\Backup($backup, []);
+		$storage['foo'] = 'xxx';
 		Assert::true(isset($storage['foo']));
 		unset($storage['foo']);
 		Assert::false(isset($storage['foo']));
 	}
 
 	public function testAffectingOriginStorage() {
-		$backup = ['foo' => 'bar'];
+		$backup = [];
 		$storage = new Form\Backup($backup, []);
-		unset($storage['foo']);
-		Assert::same([], $backup);
+		$storage['foo'] = 'bar';
+		Assert::notSame([], $backup);
 	}
 
 	public function testBackup() {
-		$backup = ['foo' => 'bar'];
+		$backup = [];
 		$source = ['a' => '1', 'b' => '2'];
 		$storage = new Form\Backup($backup, $source);
+		$storage['foo'] = 'bar';
 		$storage->archive('a');
-		Assert::count(2, $backup);
+		Assert::count(2, current($backup));
 		Assert::same('bar', $storage['foo']);
 		Assert::same('1', $storage['a']);
 	}
 
 	public function testBackupWithOverwriting() {
-		$backup = ['foo' => 'bar'];
+		$backup = [];
 		$source = ['foo' => 'baz', 'b' => '2'];
 		$storage = new Form\Backup($backup, $source);
+		$storage['foo'] = 'bar';
 		$storage->archive('foo');
-		Assert::count(1, $backup);
+		Assert::count(1, current($backup));
 		Assert::same('baz', $storage['foo']);
 	}
 
 	public function testBackupUnknownSource() {
-		$backup = ['foo' => 'bar'];
+		$backup = [];
 		$source = ['foo' => 'baz', 'b' => '2'];
 		$storage = new Form\Backup($backup, $source);
+		$storage['foo'] = 'bar';
 		$storage->archive('c');
-		Assert::count(2, $backup);
+		Assert::count(2, current($backup));
 		Assert::same('baz', $storage['foo']);
 		Assert::null($storage['c']);
 	}
 
 	public function testDroppingSources() {
-		$backup = ['foo' => 'bar', 'a' => '1', 'c' => '4', 'b' => time()];
+		$backup = [];
 		$source = ['a' => '1', 'b' => '2'];
 		$storage = new Form\Backup($backup, $source);
-		Assert::count(4, $backup);
+		$storage['foo'] = 'bar';
+		$storage['a'] = '1';
+		$storage['c'] = '4';
+		$storage['b'] = time();
+		Assert::count(4, current($backup));
 		$storage->drop();
-		Assert::count(2, $backup);
+		Assert::count(2, current($backup));
 		Assert::same('bar', $storage['foo']);
 		Assert::same('4', $storage['c']);
 	}
